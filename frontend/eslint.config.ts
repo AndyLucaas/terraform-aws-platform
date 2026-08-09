@@ -7,7 +7,7 @@ import { defineConfig } from "eslint/config";
 export default defineConfig([
   // JavaScript / TypeScript
   {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx}"],
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts,"],
 
     plugins: {
       js,
