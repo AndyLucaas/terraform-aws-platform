@@ -5,7 +5,43 @@ import pluginReact from "eslint-plugin-react";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
-  { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"], languageOptions: { globals: {...globals.browser, ...globals.node} } },
+  // JavaScript / TypeScript
+  {
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+
+    plugins: {
+      js,
+    },
+
+    extends: ["js/recommended"],
+
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+  },
+
+  // TypeScript
   tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
+
+  // React
+  {
+    files: ["**/*.{jsx,tsx}"],
+
+    ...pluginReact.configs.flat.recommended,
+
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+
+    rules: {
+      // React 17+ / Vite n'ont plus besoin de React
+      // importé explicitement pour utiliser JSX.
+      "react/react-in-jsx-scope": "off",
+    },
+  },
 ]);
