@@ -11,10 +11,8 @@ import { KeycloakAuthModal } from './components/auth/KeycloakAuthModal';
 import { ElasticSearchModal } from './components/search/ElasticSearchModal';
 
 import {
-  MOCK_VIDEOS,
   INITIAL_PROFILES,
   MOCK_TRANSCODE_JOBS,
-  INITIAL_TELEMETRY
 } from './data/mockData';
 
 import { Video, UserProfile, TranscodeJob } from './types';
@@ -23,10 +21,10 @@ export const App: React.FC = () => {
   // Application State
   const [profiles, setProfiles] = useState<UserProfile[]>(INITIAL_PROFILES);
   const [activeProfile, setActiveProfile] = useState<UserProfile>(INITIAL_PROFILES[0]);
-  const [videos, setVideos] = useState<Video[]>(MOCK_VIDEOS);
+  //const [videos, setVideos] = useState<Video[]>(MOCK_VIDEOS);
   const [favorites, setFavorites] = useState<string[]>(['v-101', 'v-102']);
   const [transcodeJobs, setTranscodeJobs] = useState<TranscodeJob[]>(MOCK_TRANSCODE_JOBS);
-  const [telemetry, setTelemetry] = useState(INITIAL_TELEMETRY);
+  //const [telemetry, setTelemetry] = useState(INITIAL_TELEMETRY);
 
   // Active Category Navigation Tab ('accueil', 'films', 'series', 'tech', 'favoris')
   const [activeCategoryTab, setActiveCategoryTab] = useState<string>('accueil');

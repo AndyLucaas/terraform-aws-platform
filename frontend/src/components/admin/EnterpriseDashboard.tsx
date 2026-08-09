@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SystemTelemetry, Video } from '../../types';
-import { Activity, Server, Users, HardDrive, ShieldAlert, Cpu, Zap, BarChart3, Lock, CheckCircle2, RefreshCw } from 'lucide-react';
+import { Activity, Server, Users, ShieldAlert, Zap, BarChart3, Lock, CheckCircle2 } from 'lucide-react';
 
 interface EnterpriseDashboardProps {
   isOpen: boolean;
