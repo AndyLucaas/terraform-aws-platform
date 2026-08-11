@@ -2,22 +2,27 @@ name: CI
 on:
   push: 
     branches:
-      - feature/**
+      - main
+      
   pull_request:
     branches:
       - main
   workflow_dispatch:
 jobs:
+  
   build:
     runs-on: ubuntu-slim
+    strategy:
+      matrix:
+        node-version: ['18.x', '20.x']
     steps:
       - name: checkout sc
         uses: actions/checkout@v4
         
-      - name: setup node
+      - name: use node version ${{ matrix.node-version }}
         uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: ${{ matrix.node-version }}
           cache-dependency-path: frontend/package-lock.json
 
       - name: install dependencies
@@ -35,23 +40,34 @@ jobs:
       - name: build
         working-directory: frontend
         run: npm run build
-  
-  test:
-    runs-on: ubuntu-slim
-    steps:
-      - name: checkout sc
-        uses: actions/checkout@v4
-        
-      - name: sonarqube scan
-        uses: SonarSource/sonarqube-scan-action@v2.0.1
+      
+      - name: upload build artifacts
+        uses: actions/upload-artifact@v3
         with:
-          node-version: 20
-          cache-dependency-path: frontend/package-lock.json
+          name: frontend-build
+          path: frontend/dist
+  
+  Testing:
+    runs-on: ubuntu-slim
+    needs: build
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
 
-      - name: install dependencies
-        working-directory: frontend
-        run: npm ci
-        
-      - name: test
+      - name: download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+      
+      - name: run tests
         working-directory: frontend
         run: npm run test
+      
+      - name: check with sonarcloud
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          args: >
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
