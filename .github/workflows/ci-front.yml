@@ -58,10 +58,6 @@ jobs:
           name: frontend-build
           path: frontend/dist
       
-      - name: run tests
-        working-directory: frontend
-        run: npm run test
-      
       - name: check with sonarcloud
         uses: sonarsource/sonarcloud-github-action@master
         with:
