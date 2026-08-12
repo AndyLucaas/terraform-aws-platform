@@ -1,5 +1,4 @@
-# --- Stage 1 : build ---
-FROM node:20-alpine AS builder
+FROM node:24.19.0 AS builder
 
 WORKDIR /build
 
@@ -8,8 +7,6 @@ RUN npm ci
 
 COPY . .
 
-# Les variables VITE_* sont figées dans le bundle à ce moment précis du build,
-# jamais relues au runtime par Nginx — elles doivent donc être passées ici.
 ARG VITE_API_BASE_URL
 ARG VITE_KEYCLOAK_URL
 ARG VITE_KEYCLOAK_REALM
@@ -21,8 +18,7 @@ ENV VITE_API_BASE_URL=$VITE_API_BASE_URL \
 
 RUN npm run build
 
-# --- Stage 2 : service statique ---
-FROM nginx:1.27-alpine
+FROM nginx:1.30-alpine
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /build/dist /usr/share/nginx/html
