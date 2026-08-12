@@ -67,7 +67,7 @@ jobs:
         #   SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   Build-docker-image:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     env:
       TAG: ${{ github.sha }}
     steps:
