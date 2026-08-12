@@ -80,16 +80,15 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v7
-        with:
-          push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/aether-frontend:${{ env.TAG }}
+      - name: Build docker image
+        run: |
+          docker build -t ${{ vars.DOCKERHUB_USERNAME }}/aether-frontend:${{ env.TAG }} -f frontend/Dockerfile.frontend frontend
+        
  
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: 'docker.io/${{ vars.DOCKERHUB_USERNAME }}/aether-frontend:${{ env.TAG }}'
+          image-ref: '${{ vars.DOCKERHUB_USERNAME }}/aether-frontend:${{ env.TAG }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
