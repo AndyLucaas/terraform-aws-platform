@@ -82,8 +82,7 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker build -t ${{ vars.DOCKERHUB_USERNAME }}/aether-frontend:${{ env.TAG }} -f frontend/Dockerfile.frontend frontend
-        
+          docker build -t ${{ vars.DOCKERHUB_USERNAME }}/aether-frontend:${{ env.TAG }} -f frontend/Dockerfile frontend
  
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
