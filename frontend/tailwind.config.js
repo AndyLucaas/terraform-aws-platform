@@ -1,40 +1,65 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  darkMode: 'class',
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        netflix: {
-          black: '#141414',
-          dark: '#181818',
-          card: '#2f2f2f',
-          red: '#E50914',
-          redHover: '#B9090B',
-          gray: '#808080',
-          lightGray: '#e5e5e5',
+        background: {
+          DEFAULT: '#F7F8FA',
+          secondary: '#FFFFFF',
+        },
+        surface: '#F2F4F7',
+        text: {
+          primary: '#1F2937',
+          secondary: '#6B7280',
         },
         brand: {
-          500: '#E50914',
-          600: '#B9090B',
-          glow: 'rgba(229, 9, 20, 0.6)',
-        }
+          DEFAULT: '#0F766E',
+          dark: '#0C5C56',
+          light: '#14B8A6',
+        },
+        secondary: {
+          DEFAULT: '#14532D',
+        },
+        accent: {
+          DEFAULT: '#D97706',
+        },
+        success: '#15803D',
+        error: '#B91C1C',
+        warning: '#CA8A04',
+        info: '#0369A1',
+        border: '#E5E7EB',
+        hover: '#ECFDF5',
+        sidebar: '#FAFAF9',
+        navbar: '#FFFFFF',
       },
       fontFamily: {
-        sans: ['Inter', 'Outfit', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
-      backgroundImage: {
-        'netflix-hero': 'linear-gradient(77deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0) 100%)',
-        'netflix-vignette': 'linear-gradient(180deg, rgba(20,20,20,0) 0%, rgba(20,20,20,0.5) 60%, rgba(20,20,20,1) 100%)',
+      borderRadius: {
+        DEFAULT: '6px',
+        lg: '10px',
       },
       boxShadow: {
-        'netflix-card': '0 8px 24px rgba(0,0,0,0.7)',
-        'netflix-red': '0 0 20px rgba(229, 9, 20, 0.5)',
-      }
+        card: '0 1px 2px 0 rgb(0 0 0 / 0.04), 0 1px 3px 0 rgb(0 0 0 / 0.06)',
+        popover: '0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06)',
+      },
+      keyframes: {
+        'fade-in': {
+          '0%': { opacity: '0', transform: 'translateY(4px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'dialog-in': {
+          '0%': { opacity: '0', transform: 'scale(0.97)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+      },
+      animation: {
+        'fade-in': 'fade-in 220ms ease-out',
+        'dialog-in': 'dialog-in 200ms ease-out',
+      },
     },
   },
   plugins: [],
-}
+};

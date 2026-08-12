@@ -1,9 +1,0 @@
----
-- name : install git
-  hosts: jenkins_server
-  become: true
-  tasks:
-    - name : install git
-      ansible.builtin.apt:
-        name: git
-        state: present
