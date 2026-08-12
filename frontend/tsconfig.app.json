@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,
+    "ignoreDeprecations": "6.0",
 
     "baseUrl": ".",
     "paths": {
