@@ -1,70 +1,82 @@
 name: CI
 on:
-  push: 
-    branches:
-      - main
-
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  #     - master
+  #   paths:
+  #     - "frontend/**"
+  #     - "backend/**"
+  # pull_request:
+  #   branches:
+  #     - main
+  #     - master
+  #   paths:
+  #     - "frontend/**"
+  #     - "backend/**"
+  # workflow_dispatch:
+    pull_request:
+      types: [opened]
+      branches:
+        - develop
 
 jobs:
   
-  # build:
-  #   runs-on: ubuntu-slim
-
-  #   steps:
-  #     - name: checkout sc
-  #       uses: actions/checkout@v4
-        
-  #     - name: use node version 24
-  #       uses: actions/setup-node@v7
-  #       with:
-  #         node-version: 24
-  #         cache-dependency-path: frontend/package-lock.json
-
-  #     - name: install dependencies
-  #       working-directory: frontend
-  #       run: npm ci
-        
-  #     - name: lint
-  #       working-directory: frontend
-  #       run: npm run lint
-        
-  #     - name: build
-  #       working-directory: frontend
-  #       run: npm run build
-      
-  #     - name: upload build artifacts
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: frontend-build
-  #         path: frontend/dist
+  build_frontend:
   
-  # Testing:
-  #   runs-on: ubuntu-slim
-  #   needs: build
-  #   steps:
-  #     - name: checkout code
-  #       uses: actions/checkout@v4
+    runs-on: ubuntu-slim
 
-  #     - name: download build artifacts
-  #       uses: actions/download-artifact@v8
-  #       with:
-  #         name: frontend-build
-  #         path: frontend/dist
+    steps:
+      - name: checkout sc
+        uses: actions/checkout@v4
+        
+      - name: use node version 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: install dependencies
+        working-directory: frontend
+        run: npm ci
+        
+      - name: lint
+        working-directory: frontend
+        run: npm run lint
+        
+      - name: build
+        working-directory: frontend
+        run: npm run build
       
-  #     - name: check with sonarcloud
-  #       uses: sonarsource/sonarcloud-github-action@ffc3010689be73b8e5ae0c57ce35968afd7909e8
-  #       with:
-  #         args: >
-        #     -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-        #     -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-        #     -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-        # env:
-        #   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        #   SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/dist
+  
+  Testing:
+    runs-on: ubuntu-slim
+    needs: build_frontend
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: frontend-build
+          path: frontend/dist
+      
+      - name: check with sonarcloud
+        uses: sonarsource/sonarcloud-github-action@ffc3010689be73b8e5ae0c57ce35968afd7909e8
+        with:
+          args: >
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   Build-docker-image:
     runs-on: ubuntu-latest
