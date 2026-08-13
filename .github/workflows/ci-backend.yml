@@ -26,13 +26,5 @@ jobs:
             java-version: '21'
         - run: java --version
 
-        - name: build
-          working-directory: backend
-          run: |
-            mvn -B clean
-            mvn -B package --file pom.xml
-
-        - name: unit tests
-          working-directory: backend
-          run: mvn -B test --file pom.xml
-
+        - name: build and test
+          run: mvn -B clean package --file backend/pom.xml
