@@ -26,6 +26,11 @@ jobs:
             java-version: '25'
         - run: java --version
         
+        - name: build
+          working-directory: backend
+          run: mvn -B package --file pom.xml
+
         - name: unit tests
           working-directory: backend
           run: mvn -B test --file pom.xml
+
