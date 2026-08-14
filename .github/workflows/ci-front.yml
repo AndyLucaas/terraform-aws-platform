@@ -81,7 +81,7 @@ jobs:
   Build-docker-image:
     runs-on: ubuntu-latest
     env:
-      TAG: ${{ github.sha }}
+      TAG: ${{ github.event.pull_request.number }}
     steps:
       - name: checkout code
         uses: actions/checkout@v4
