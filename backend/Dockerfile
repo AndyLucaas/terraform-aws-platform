@@ -3,14 +3,12 @@ FROM maven:3.9-eclipse-temurin-21 AS builder
 
 WORKDIR /build
 
-# Couche de cache : les dépendances ne sont retéléchargées que si pom.xml change
 COPY pom.xml .
 RUN mvn -B dependency:go-offline
 
 COPY src ./src
 RUN mvn -B clean package -DskipTests
 
-# --- Stage 2 : exécution ---
 FROM eclipse-temurin:21-jre-alpine
 
 RUN addgroup -S itdesk && adduser -S itdesk -G itdesk
