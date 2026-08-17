@@ -2,7 +2,7 @@ apiVersion: v1
 kind: deployment
 metadata:
   name: backend
-  namespace: dev-backend
+  namespace: dev
   labels:
     app: backend
 spec:
@@ -13,8 +13,10 @@ spec:
   strategy:
     type: rollingUpdate
     rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+      maxSurge: 1               # Combien de Pods en plus pendant l'update
+      maxUnavailable: 0          # Combien de Pods peuvent être indisponibles
+    progressDeadlineSeconds: 600  # Timeout pour détecter un rollout bloqué
+    minReadySeconds: 10           # Attendre 10s après Ready avant de continuer
   template:
     metadata:
       labels:
