@@ -14,7 +14,7 @@ on:
 jobs:
   build_frontend:
   
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-24.04
 
     steps:
       - name: checkout sc
@@ -45,7 +45,7 @@ jobs:
           path: frontend/dist
   
   Testing:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-24.04
     needs: build_frontend
     steps:
       - name: checkout code
@@ -69,10 +69,11 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   Build-docker-image:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [build_frontend, Testing]
     env:
       TAG: ${{ github.event.pull_request.number }}
+      IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/itdesk-frontend
     steps:
       - name: checkout code
         uses: actions/checkout@v4
@@ -85,14 +86,17 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker build -t ${{ vars.DOCKERHUB_USERNAME }}/aether-frontend:${{ env.TAG }} -f frontend/Dockerfile frontend
+          docker build -t ${{ env.IMAGE }}:${{ env.TAG }} -f frontend/Dockerfile frontend
  
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: '${{ vars.DOCKERHUB_USERNAME }}/aether-frontend:${{ env.TAG }}'
+          image-ref: '${{ vars.DOCKERHUB_USERNAME }}/itdesk-frontend:${{ env.TAG }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+      
+      - name: push docker image
+        run: docker push ${{ env.IMAGE }}:${{ env.TAG }}
