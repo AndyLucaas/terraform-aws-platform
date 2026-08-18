@@ -24,16 +24,23 @@ spec:
     spec:
       containers:
         - name: backend
-          image: andylucas06/aether-backend:latest
+          image: andylucas06/itdesk-backend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
-          env:
-            - name: SECRET_KEY
+          env: #conf via db secret
+            - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: backend-secret
-                  key: SECRET_KEY
-          envFrom:
+                  name: db-secret
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_PASSWORD
+          envFrom: # conf via backend configmap and secret
             - configMapRef:
                 name: backend-config
+            - secretRef:
+                name: backend-secret 
