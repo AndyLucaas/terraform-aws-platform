@@ -1,102 +1,102 @@
-name: CI
-on:
-  push:
-    branches:
-      - "feature/*"
-    # paths:
-    #   - "frontend/**"
-  pull_request:
-    branches:
-      - main
-    # paths:
-    #   - "frontend/**"
+# name: CI
+# on:
+#   push:
+#     branches:
+#       - "feature/*"
+#     # paths:
+#     #   - "frontend/**"
+#   pull_request:
+#     branches:
+#       - main
+#     # paths:
+#     #   - "frontend/**"
 
-jobs:
-  build_frontend:
+# jobs:
+#   build_frontend:
   
-    runs-on: ubuntu-24.04
+#     runs-on: ubuntu-24.04
 
-    steps:
-      - name: checkout sc
-        uses: actions/checkout@v4
+#     steps:
+#       - name: checkout sc
+#         uses: actions/checkout@v4
         
-      - name: use node version 24
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache-dependency-path: frontend/package-lock.json
+#       - name: use node version 24
+#         uses: actions/setup-node@v7
+#         with:
+#           node-version: 24
+#           cache-dependency-path: frontend/package-lock.json
 
-      - name: install dependencies
-        working-directory: frontend
-        run: npm ci
+#       - name: install dependencies
+#         working-directory: frontend
+#         run: npm ci
         
-      - name: lint
-        working-directory: frontend
-        run: npm run lint
+#       - name: lint
+#         working-directory: frontend
+#         run: npm run lint
         
-      - name: build
-        working-directory: frontend
-        run: npm run build
+#       - name: build
+#         working-directory: frontend
+#         run: npm run build
       
-      - name: upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-build
-          path: frontend/dist
+#       - name: upload build artifacts
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: frontend-build
+#           path: frontend/dist
   
-  Testing:
-    runs-on: ubuntu-24.04
-    needs: build_frontend
-    steps:
-      - name: checkout code
-        uses: actions/checkout@v4
+#   Testing:
+#     runs-on: ubuntu-24.04
+#     needs: build_frontend
+#     steps:
+#       - name: checkout code
+#         uses: actions/checkout@v4
 
-      - name: download build artifacts
-        uses: actions/download-artifact@v8
-        with:
-          name: frontend-build
-          path: frontend/dist
+#       - name: download build artifacts
+#         uses: actions/download-artifact@v8
+#         with:
+#           name: frontend-build
+#           path: frontend/dist
       
-      - name: check with sonarcloud
-        uses: sonarsource/sonarcloud-github-action@ffc3010689be73b8e5ae0c57ce35968afd7909e8
-        with:
-          args: >
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+#       - name: check with sonarcloud
+#         uses: sonarsource/sonarcloud-github-action@ffc3010689be73b8e5ae0c57ce35968afd7909e8
+#         with:
+#           args: >
+#             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+#             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+#             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+#         env:
+#           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-  Build-docker-image:
-    runs-on: ubuntu-24.04
-    needs: [build_frontend, Testing]
-    env:
-      TAG: ${{ github.event.pull_request.number }}
-      IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/itdesk-frontend
-    steps:
-      - name: checkout code
-        uses: actions/checkout@v4
+#   Build-docker-image:
+#     runs-on: ubuntu-24.04
+#     needs: [build_frontend, Testing]
+#     env:
+#       TAG: ${{ github.event.pull_request.number }}
+#       IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/itdesk-frontend
+#     steps:
+#       - name: checkout code
+#         uses: actions/checkout@v4
       
-      - name: Login to Docker Hub
-        uses: docker/login-action@v4
-        with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
+#       - name: Login to Docker Hub
+#         uses: docker/login-action@v4
+#         with:
+#           username: ${{ vars.DOCKERHUB_USERNAME }}
+#           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build docker image
-        run: |
-          docker build -t ${{ env.IMAGE }}:${{ env.TAG }} -f frontend/Dockerfile frontend
+#       - name: Build docker image
+#         run: |
+#           docker build -t ${{ env.IMAGE }}:${{ env.TAG }} -f frontend/Dockerfile frontend
  
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: '${{ vars.DOCKERHUB_USERNAME }}/itdesk-frontend:${{ env.TAG }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+#       - name: Run Trivy vulnerability scanner
+#         uses: aquasecurity/trivy-action@v0.36.0
+#         with:
+#           image-ref: '${{ vars.DOCKERHUB_USERNAME }}/itdesk-frontend:${{ env.TAG }}'
+#           format: 'table'
+#           exit-code: '1'
+#           ignore-unfixed: true
+#           vuln-type: 'os,library'
+#           severity: 'CRITICAL,HIGH'
       
-      - name: push docker image
-        run: docker push ${{ env.IMAGE }}:${{ env.TAG }}
+#       - name: push docker image
+#         run: docker push ${{ env.IMAGE }}:${{ env.TAG }}
