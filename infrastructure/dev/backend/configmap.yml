@@ -4,14 +4,14 @@ metadata:
   name: backend-config
   namespace: dev
 data:
-  DB_URL: jdbc:postgresql://postgres:5432/itdesk
+  DB_URL: jdbc:postgresql://postgres-service:5432/itdesk
   KEYCLOAK_ISSUER_URI: https://auth.itdesk.example.com/realms/itdesk
-  KEYCLOAK_JWK_URI: http://keycloak:8080/realms/itdesk/protocol/openid-connect/certs
+  KEYCLOAK_JWK_URI: http://keycloak-service:8080/realms/itdesk/protocol/openid-connect/certs
   KEYCLOAK_REALM: itdesk
   KEYCLOAK_CLIENT_ID: itdesk-backend
-  KEYCLOAK_ADMIN_BASE_URL: http://keycloak:8080
+  KEYCLOAK_ADMIN_BASE_URL: http://keycloak-service:8080
   KEYCLOAK_ADMIN_CLIENT_ID: itdesk-admin-cli
-  KEYCLOAK_TOKEN_URI: http://keycloak:8080/realms/itdesk/protocol/openid-connect/token
+  KEYCLOAK_TOKEN_URI: http://keycloak-service:8080/realms/itdesk/protocol/openid-connect/token
   SERVER_PORT: "8080"
   CORS_ALLOWED_ORIGINS: https://itdesk.example.com
   ATTACHMENTS_PATH: /var/itdesk/attachments

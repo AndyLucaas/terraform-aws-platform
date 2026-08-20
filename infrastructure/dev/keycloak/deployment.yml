@@ -21,10 +21,11 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
-          env:
           envFrom: #secret
             - secretRef:
-                name: kc-secret
+                name: keycloak-secret
+            - configMapRef:
+                name: backend-config
           volumeMounts:
                 - name: kc-test
                   mountPath: /var/lib/pgrs
