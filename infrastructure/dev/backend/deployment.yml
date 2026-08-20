@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: andylucas06/itdesk-backend:latest
+          image: andylucas06/itdesk-backend:14
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
