@@ -10,13 +10,6 @@ spec:
   selector:
     matchLabels:
       app: backend
-  strategy:
-    type: rollingUpdate
-    rollingUpdate:
-      maxSurge: 1               # Combien de Pods en plus pendant l'update
-      maxUnavailable: 0          # Combien de Pods peuvent être indisponibles
-    progressDeadlineSeconds: 600  # Timeout pour détecter un rollout bloqué
-    minReadySeconds: 10           # Attendre 10s après Ready avant de continuer
   template:
     metadata:
       labels:

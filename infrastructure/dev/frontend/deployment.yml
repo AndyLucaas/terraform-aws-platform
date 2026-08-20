@@ -6,28 +6,23 @@ metadata:
   labels:
     name: frontend
 spec:
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
+  replicas: 1
   template:
     metadata:
       labels:
         name: frontend
-    spec:
+    spec: 
       containers:
       - image:  andylucas06/itdesk-frontend:latest
         name: itdesk-frontend
-        imagePullPolicy: IfNotPresent
         env:
-        - name:  ENVVARNAME
-          value:  ENVVARVALUE       
+          - name:  ENVVARNAME
+            value:  ENVVARVALUE       
         ports:
-          containerPort: 80
+          - containerPort: 80
         volumeMounts:
-        - mountPath: /data
-          name: data
+          - mountPath: /data
+            name: data
       volumes:
         - name: data
           emptyDir: {}
