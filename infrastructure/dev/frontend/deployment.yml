@@ -17,7 +17,7 @@ spec:
         name: frontend
     spec:
       containers:
-      - image:  andylucas06/itdesk-frontend:latest
+      - image:  andylucas06/itdesk-frontend:14
         name: itdesk-frontend
         imagePullPolicy: IfNotPresent
         env:
