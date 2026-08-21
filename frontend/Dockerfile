@@ -25,7 +25,6 @@ RUN addgroup -S DevOps_Group && adduser -S lucas -G DevOps_Group
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /build/dist /usr/share/nginx/html
 
-USER lucas
 EXPOSE 80
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=5 \
