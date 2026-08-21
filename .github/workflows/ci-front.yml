@@ -1,10 +1,10 @@
 name: CI
 on:
-  push:
-    branches:
-      - "feature/*"
-    paths:
-      - "frontend/**"
+  # push:
+  #   branches:
+  #     - "feature/*"
+  #   paths:
+  #     - "frontend/**"
   pull_request:
     branches:
       - main
@@ -75,6 +75,8 @@ jobs:
       TAG: ${{ github.event.pull_request.number }}
       IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/itdesk-frontend
     steps:
+      - name: copy env file
+        run: cp frontend/.env.example frontend/.env
       - name: checkout code
         uses: actions/checkout@v4
       
