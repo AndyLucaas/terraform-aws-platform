@@ -18,8 +18,15 @@ spec:
       containers:
         - name: keycloak-container
           image: quay.io/keycloak/keycloak:24.0
+          containers:
+          args: ["start-dev"]
           ports:
             - containerPort: 8080
+          env:
+            - name: KC_HOSTNAME
+              value: auth.itdesk.example.com
+            - name: KC_PROXY
+              value: edge
           envFrom: #secret
             - secretRef:
                 name: keycloak-secret
