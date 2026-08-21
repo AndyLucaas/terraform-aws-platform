@@ -16,7 +16,7 @@ spec:
         app: frontend
     spec: 
       containers:
-      - image:  andylucas06/itdesk-frontend:14
+      - image:  andylucas06/itdesk-frontend:18
         name: itdesk-frontend
         ports:
           - containerPort: 80
