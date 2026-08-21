@@ -76,7 +76,9 @@ jobs:
       IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/itdesk-frontend
     steps:
       - name: copy env file
-        run: cp frontend/.env.example frontend/.env
+        working-directory: frontend
+        run: cp .env.example .env
+
       - name: checkout code
         uses: actions/checkout@v4
       
