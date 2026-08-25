@@ -1,11 +1,11 @@
-name: Test environment pipeline
+name: SonarQube EC2 Deployment Pipeline
 on:
   push:
     branches:
       - "feature/infra"
       - "fix/infra"
-    paths:
-      - "infrastructure/ec2_terraform/**"
+    # paths:
+    #   - "infrastructure/ec2_terraform/**"
 
 jobs:
   deploy:
@@ -21,15 +21,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
         with:
-          terraform_version: 1.7.6
+          terraform_version: "1.14.6"
 
       - name: Terraform Init
         run: terraform init
         working-directory: infrastructure/ec2_terraform
-    
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: infrastructure/ec2_terraform
+        
       - name: Terraform Plan
         run: terraform plan -out=tfplan
         working-directory: infrastructure/ec2_terraform
