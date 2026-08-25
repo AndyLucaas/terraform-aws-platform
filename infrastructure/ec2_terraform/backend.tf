@@ -3,6 +3,6 @@ terraform {
   backend "s3" {
     bucket = "terraform-bckp-state"
     key    = "sonar_server/terraform.tfstate"
-    region = "us-north-1"
+    region = "eu-north-1"
   }
 }
