@@ -13,9 +13,7 @@ on:
 
 jobs:
   build_frontend:
-  
     runs-on: ubuntu-24.04
-
     steps:
       - name: checkout sc
         uses: actions/checkout@v4

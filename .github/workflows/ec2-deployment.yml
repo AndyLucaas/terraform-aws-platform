@@ -1,0 +1,32 @@
+name: Test environment pipeline
+on:
+  push:
+    branches:
+      - "feature/infra"
+      - "fix/infra"
+    paths:
+      - "infrastructure/ec2_terraform/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.6
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: infrastructure/ec2_terraform
+    
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: infrastructure/ec2_terraform
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: infrastructure/ec2_terraform
