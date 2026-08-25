@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: database
+  namespace: dev
+  labels:
+    app: database
+spec:
+  serviceName: "database"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: database
+          image: postgres:15.3-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name:  db-secret
+            - configMapRef:
+                name: db-configmap
+          volumeMounts:
+            - name: db-test
+              mountPath: /var/lib/pgrs
+      volumes:
+        - name: db-test
+          hostPath:
+            path: /var/log
