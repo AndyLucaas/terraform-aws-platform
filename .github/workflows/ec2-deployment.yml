@@ -28,7 +28,11 @@ jobs:
       - name: Terraform Init
         run: terraform init
         working-directory: infrastructure/ec2_terraform
-    
+        
+      - name: Terraform Validate
+        run: terraform validate
+
+        working-directory: infrastructure/ec2_terraform
       - name: Terraform Plan
         run: terraform plan -out=tfplan
         working-directory: infrastructure/ec2_terraform
