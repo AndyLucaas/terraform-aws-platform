@@ -1,0 +1,34 @@
+frontend:
+  replicaCount: 1
+  image:
+    tag: ""
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080
+  ingress:
+    enabled: false
+    tls: []
+
+backend:
+  replicaCount: 1
+  image:
+    tag: ""
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8180
+  config:
+    enabled: "true"
+    DB_URL: jdbc:postgresql://itticket-postgres:5432/itdesk
+    KEYCLOAK_ISSUER_URI: https://auth.itdesk.example.com/realms/itdesk
+    KEYCLOAK_JWK_URI: http://itticket-keycloak:8080/realms/itdesk/protocol/openid-connect/certs
+    KEYCLOAK_REALM: itdesk
+    KEYCLOAK_CLIENT_ID: itdesk-backend
+    KEYCLOAK_ADMIN_BASE_URL: http://itticket-keycloak:8080
+    KEYCLOAK_ADMIN_CLIENT_ID: itdesk-admin-cli
+    KEYCLOAK_TOKEN_URI: http://itticket-keycloak:8080/realms/itdesk/protocol/openid-connect/token
+    SERVER_PORT: "8080"
+    CORS_ALLOWED_ORIGINS: https://itdesk.example.com
+    ATTACHMENTS_PATH: /var/itdesk/attachments
+    

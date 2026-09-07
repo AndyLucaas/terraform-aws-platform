@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "backend.name" . }}
   labels:
-    {{- include "backend.labels" . | nindent 4 }}
+    {{- include "backend.selectorLabels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "backend.labels" . | nindent 8 }}
+        {{- include "backend.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.podSecurityContext }}
       securityContext:
@@ -26,7 +26,6 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-
           {{- with .Values.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
@@ -39,10 +38,12 @@ spec:
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           
-          envfrom:
+          envFrom:
             - configMapRef:
-                name: {{ include "backend.name" . }}
-
+                name: {{ include "backend.name" . }}-cfg
+            - secretRef:
+                name: {{ include "backend.name" . }}-secret
+                
           {{- if eq .Values.environment "production" }}
           {{- with .Values.livenessProbe }}
           livenessProbe:

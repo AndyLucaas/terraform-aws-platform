@@ -1,0 +1,15 @@
+dependencies:
+- name: backend
+  repository: file://charts/backend
+  version: 0.1.0
+- name: frontend
+  repository: file://charts/frontend
+  version: 0.1.0
+- name: keycloak
+  repository: oci://registry-1.docker.io/cloudpirates
+  version: 0.21.34
+- name: postgres
+  repository: oci://registry-1.docker.io/cloudpirates
+  version: 0.20.4
+digest: sha256:06536ee3b6ed25fd270066471a38da43954aa30863991563494a2e620a87cc9b
+generated: "2026-09-07T16:13:48.583792016+03:00"

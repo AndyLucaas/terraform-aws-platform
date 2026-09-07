@@ -1,0 +1,76 @@
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: itdesk
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d itdesk"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - itdesk-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: keycloak-cntnr
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    ports:
+      - "8180:8080"
+    networks:
+      - itdesk-network
+
+  application:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: application
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    networks:
+      - itdesk-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+        VITE_KEYCLOAK_URL: ${VITE_KEYCLOAK_URL}
+        VITE_KEYCLOAK_REALM: ${VITE_KEYCLOAK_REALM}
+        VITE_KEYCLOAK_CLIENT_ID: ${VITE_KEYCLOAK_CLIENT_ID}
+    container_name: frontend
+    depends_on:
+      - application
+    ports:
+      - "80:8080"
+    networks:
+      - itdesk-network
+
+networks:
+  itdesk-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  keycloak_data:
