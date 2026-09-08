@@ -9,8 +9,13 @@ import { UsersPage } from '@/features/users/pages/UsersPage';
 import { OrganizationPage } from '@/features/organization/pages/OrganizationPage';
 import { CatalogPage } from '@/features/catalog/pages/CatalogPage';
 import { ProfilePage } from '@/features/profile/pages/ProfilePage';
+import { LoginPage } from '@/features/auth/pages/LoginPage';
 
 export const router = createBrowserRouter([
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
   {
     path: '/',
     element: <AppLayout />,

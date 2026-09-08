@@ -1,47 +1,90 @@
-import { useEffect, useMemo, useState } from 'react';
-import { keycloak } from './keycloak';
-import type { AppRole, AuthenticatedIdentity } from './types';
+import { useEffect, useState } from 'react';
+import { authApi } from './authApi';
+import type { AppRole, AuthenticatedIdentity, LoginCredentials } from './types';
 
-const ROLE_VALUES: AppRole[] = ['ADMINISTRATOR', 'TECHNICIAN', 'MANAGER', 'USER'];
+let globalIdentity: AuthenticatedIdentity | null = null;
+let listeners: Array<() => void> = [];
 
-function buildIdentity(): AuthenticatedIdentity | null {
-  const tokenParsed = keycloak.tokenParsed;
-  if (!tokenParsed) {
-    return null;
-  }
-  const realmRoles: string[] = tokenParsed.realm_access?.roles ?? [];
-  const roles = ROLE_VALUES.filter((role) => realmRoles.includes(role));
+function notifyListeners() {
+  listeners.forEach((listener) => listener());
+}
 
-  return {
-    username: tokenParsed.preferred_username ?? '',
-    fullName: `${tokenParsed.given_name ?? ''} ${tokenParsed.family_name ?? ''}`.trim(),
-    email: tokenParsed.email ?? '',
-    roles,
-  };
+export function setAuthState(identity: AuthenticatedIdentity | null) {
+  globalIdentity = identity;
+  notifyListeners();
 }
 
 export function useAuth() {
-  const [tokenVersion, setTokenVersion] = useState(0);
+  const [identity, setIdentity] = useState<AuthenticatedIdentity | null>(globalIdentity);
+  const [isLoading, setIsLoading] = useState<boolean>(!globalIdentity && Boolean(localStorage.getItem('access_token')));
 
   useEffect(() => {
-    const bump = () => setTokenVersion((current) => current + 1);
-    keycloak.onAuthSuccess = bump;
-    keycloak.onAuthRefreshSuccess = bump;
+    const handleChange = () => setIdentity(globalIdentity);
+    listeners.push(handleChange);
+
+    if (!globalIdentity && localStorage.getItem('access_token')) {
+      setIsLoading(true);
+      authApi
+        .getMe()
+        .then((user) => {
+          setAuthState({
+            id: user.id,
+            username: user.username,
+            fullName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username,
+            email: user.email,
+            roles: user.roles,
+          });
+        })
+        .catch(() => {
+          setAuthState(null);
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+
     return () => {
-      keycloak.onAuthSuccess = undefined;
-      keycloak.onAuthRefreshSuccess = undefined;
+      listeners = listeners.filter((l) => l !== handleChange);
     };
   }, []);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- tokenVersion force intentionnellement le recalcul après un refresh de token, sans être lu directement dans buildIdentity()
-  const identity = useMemo(() => buildIdentity(), [tokenVersion]);
+  const login = async (credentials: LoginCredentials) => {
+    setIsLoading(true);
+    try {
+      const data = await authApi.login(credentials);
+      const user = data.user;
+      const newIdentity: AuthenticatedIdentity = {
+        id: user.id,
+        username: user.username,
+        fullName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username,
+        email: user.email,
+        roles: user.roles,
+      };
+      setAuthState(newIdentity);
+      return newIdentity;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    await authApi.logout();
+    setAuthState(null);
+    window.location.href = '/login';
+  };
 
   const hasRole = (role: AppRole): boolean => Boolean(identity?.roles.includes(role));
   const hasAnyRole = (roles: AppRole[]): boolean => roles.some(hasRole);
 
-  const logout = (): void => {
-    keycloak.logout({ redirectUri: window.location.origin });
+  return {
+    identity,
+    isAuthenticated: Boolean(identity),
+    isLoading,
+    login,
+    logout,
+    hasRole,
+    hasAnyRole,
   };
-
-  return { identity, hasRole, hasAnyRole, logout };
 }
