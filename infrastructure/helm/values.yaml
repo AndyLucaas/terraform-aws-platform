@@ -3,7 +3,7 @@ frontend:
   image:
     repository: andylucas06/itdesk-frontend
     pullPolicy: IfNotPresent
-    tag: ""
+    tag: latest
 
   ports:
     - name: http-port-frontend
@@ -21,7 +21,7 @@ backend:
   image:
     repository: andylucas06/itdesk-backend
     pullPolicy: IfNotPresent
-    tag: ""
+    tag: 14
   
   ports:
     - name:  http-port
