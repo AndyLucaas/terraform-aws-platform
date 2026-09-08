@@ -24,9 +24,10 @@ backend:
       containerPort: 8080
       protocol: TCP
   service:
-    type: ClusterIP
-    port: 8080
-    targetPort: http-port
+    - port: 8080
+      targetPort: http-port
+      protocol: TCP
+      
   config:
     enabled: "true"
     DB_URL: jdbc:postgresql://itticket-postgres:5432/itdesk

@@ -6,14 +6,14 @@ frontend:
     tag: latest
 
   ports:
-    - name: http-port-frontend
+    - name: http-port
       containerPort: 80
       protocol: TCP
 
   service:
-    port: 8080
-    targetPort: http-port-frontend
-    protocol: TCP
+    - port: 8080
+      targetPort: http-port
+      protocol: TCP
 
 backend:
   replicaCount: 1
@@ -29,9 +29,9 @@ backend:
       protocol: TCP
   
   service:
-    type: ClusterIP
-    port: 8080
-    targetPort: http-port
+    - port: 8080
+      targetPort: http-port
+      protocol: TCP
 
   config: {}
     
