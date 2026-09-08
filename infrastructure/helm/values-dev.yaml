@@ -8,14 +8,10 @@ frontend:
     - name: http-port-frontend
       containerPort: 80
       protocol: TCP
-
   service:
     port: 8080
     targetPort: http-port-frontend
     protocol: TCP
-  ingress:
-    enabled: false
-    tls: []
 
 backend:
   replicaCount: 1

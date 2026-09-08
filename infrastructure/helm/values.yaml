@@ -15,10 +15,6 @@ frontend:
     targetPort: http-port-frontend
     protocol: TCP
 
-  ingress:
-    enabled: false
-    tls: []
-
 backend:
   replicaCount: 1
 
