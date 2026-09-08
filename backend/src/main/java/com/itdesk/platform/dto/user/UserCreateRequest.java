@@ -31,6 +31,8 @@ public record UserCreateRequest(
         Long teamId,
 
         @NotEmpty(message = "Au moins un rôle doit être attribué")
-        Set<String> roleCodes
+        Set<String> roleCodes,
+
+        String password
 ) {
 }

@@ -8,7 +8,6 @@ import lombok.*;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,8 +22,8 @@ public class User extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "keycloak_id", nullable = false, unique = true)
-    private UUID keycloakId;
+    @Column(nullable = false, length = 255)
+    private String password;
 
     @Column(nullable = false, unique = true, length = 100)
     private String username;

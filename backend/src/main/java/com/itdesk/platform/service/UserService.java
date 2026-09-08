@@ -22,12 +22,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.keygen.KeyGenerators;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +39,7 @@ public class UserService {
     private final TeamRepository teamRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
-    private final KeycloakAdminService keycloakAdminService;
+    private final PasswordEncoder passwordEncoder;
 
     public PageResponse<UserResponse> search(String query, Pageable pageable) {
         Specification<User> specification = (root, criteriaQuery, cb) -> {
@@ -71,8 +71,10 @@ public class UserService {
             throw new DuplicateResourceException("L'email '" + request.email() + "' est déjà utilisé");
         }
 
+        String rawPassword = StringUtils.hasText(request.password()) ? request.password() : KeyGenerators.string().generateKey();
+
         User user = User.builder()
-                .keycloakId(UUID.randomUUID())
+                .password(passwordEncoder.encode(rawPassword))
                 .username(request.username())
                 .email(request.email())
                 .firstName(request.firstName())
@@ -81,7 +83,7 @@ public class UserService {
                 .jobTitle(request.jobTitle())
                 .department(resolveDepartment(request.departmentId()))
                 .team(resolveTeam(request.teamId()))
-                .status(UserStatus.PENDING)
+                .status(UserStatus.ACTIVE)
                 .available(true)
                 .roles(resolveRoles(request.roleCodes()))
                 .build();
@@ -129,21 +131,19 @@ public class UserService {
     public void block(Long id) {
         User user = getOrThrow(id);
         user.setStatus(UserStatus.BLOCKED);
-        keycloakAdminService.setUserEnabled(user.getKeycloakId(), false);
     }
 
     @Transactional
     public void unblock(Long id) {
         User user = getOrThrow(id);
         user.setStatus(UserStatus.ACTIVE);
-        keycloakAdminService.setUserEnabled(user.getKeycloakId(), true);
     }
 
     @Transactional
     public void resetPassword(Long id) {
         User user = getOrThrow(id);
         String temporaryPassword = KeyGenerators.string().generateKey();
-        keycloakAdminService.resetPassword(user.getKeycloakId(), temporaryPassword);
+        user.setPassword(passwordEncoder.encode(temporaryPassword));
     }
 
     @Transactional

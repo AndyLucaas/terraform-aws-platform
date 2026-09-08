@@ -9,8 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 @RequiredArgsConstructor
 public class CurrentUserProvider {
@@ -22,9 +20,9 @@ public class CurrentUserProvider {
         if (authentication == null || !(authentication.getPrincipal() instanceof Jwt jwt)) {
             throw new ResourceNotFoundException("Aucun utilisateur authentifié dans le contexte de sécurité");
         }
-        UUID keycloakId = UUID.fromString(jwt.getSubject());
-        return userRepository.findByKeycloakId(keycloakId)
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur non synchronisé : " + keycloakId));
+        String username = jwt.getSubject();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable : " + username));
     }
 
     public Long getCurrentUserId() {
