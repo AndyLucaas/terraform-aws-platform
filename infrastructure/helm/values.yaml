@@ -4,42 +4,82 @@ frontend:
     repository: andylucas06/itdesk-frontend
     pullPolicy: IfNotPresent
     tag: ""
+
+  ports:
+    - name: http-port-frontend
+      containerPort: 80
+      protocol: TCP
+
   service:
-    type: ClusterIP
-    port: 80
+    port: 8080
+    targetPort: http-port-frontend
+    protocol: TCP
+
   ingress:
     enabled: false
     tls: []
 
 backend:
   replicaCount: 1
+
   image:
     repository: andylucas06/itdesk-backend
     pullPolicy: IfNotPresent
     tag: ""
-  service: {}
+  
+  ports:
+    - name:  http-port
+      containerPort: 8080
+      protocol: TCP
+  
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: http-port
+
   config: {}
     
 ingress:
-  enabled: false
-  className: ""
+  enabled: true
+  className: nginx
   annotations: {}
   hosts:
-    - host: chart-example.local
+    - host: app.itticket.local
       paths:
         - path: /
-          pathType: ImplementationSpecific
-  tls: 
-    - secretName: chart-example-tls
-      hosts:
-        - chart-example.local
+          pathType: Prefix
+          backend:
+            service:
+              name: itticket-frontend-svc
+              port:
+                number: 8080
+    - host: api.itticket.local
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: itticket-backend-svc
+              port:
+                number: 8080
+    - host: auth.itticket.local
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: itticket-keycloak
+              port:
+                number: 8080
+  # tls: 
+  #   - secretName: chart-example-tls
+  #     hosts:  
+  #       - app.itticket.local
 autoscaling:
   enabled: false
 httpRoute:
   enabled: false 
-service:
-    type: ClusterIP
-    port: 8080
+
 resources:
   enabled: false
   limits:
