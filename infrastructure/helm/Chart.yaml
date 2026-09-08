@@ -11,9 +11,6 @@ dependencies:
   - name: frontend
     version: 0.1.0
     repository: "file://charts/frontend"
-  - name: keycloak
-    version: 0.21.34
-    repository: "oci://registry-1.docker.io/cloudpirates"
   # - name: postgres
   #   version: 0.20.4
   #   repository: "oci://registry-1.docker.io/cloudpirates"
