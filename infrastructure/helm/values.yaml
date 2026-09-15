@@ -71,15 +71,6 @@ ingress:
               name: itticket-backend-svc
               port:
                 number: 8080
-    - host: auth.itticket.local
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: itticket-keycloak
-              port:
-                number: 8080
   # tls: 
   #   - secretName: chart-example-tls
   #     hosts:  
