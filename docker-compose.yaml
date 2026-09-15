@@ -4,32 +4,18 @@ services:
     image: postgres:16-alpine
     container_name: postgres
     environment:
-      POSTGRES_DB: itdesk
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-itdesk}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d itdesk"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_NAME:-itdesk}"]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - itdesk-network
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:24.0
-    container_name: keycloak-cntnr
-    command: start-dev
-    environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME:-admin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
-    volumes:
-      - keycloak_data:/opt/keycloak/data
-    ports:
-      - "8180:8080"
     networks:
       - itdesk-network
 
@@ -39,14 +25,29 @@ services:
       dockerfile: Dockerfile
     container_name: application
     env_file:
-      - .env
+      - path: .env
+        required: false
+    environment:
+      DB_URL: ${DB_URL:-jdbc:postgresql://postgres:5432/itdesk}
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      SERVER_PORT: ${SERVER_PORT:-8080}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost,http://localhost:80,http://localhost:8080,http://localhost:5173}
+      ATTACHMENTS_PATH: ${ATTACHMENTS_PATH:-/var/itdesk/attachments}
+      JWT_SECRET: ${JWT_SECRET}
+    volumes:
+      - attachments_data:/var/itdesk/attachments
     depends_on:
       postgres:
         condition: service_healthy
-      keycloak:
-        condition: service_started
     ports:
       - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
     networks:
       - itdesk-network
 
@@ -55,15 +56,19 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
-        VITE_KEYCLOAK_URL: ${VITE_KEYCLOAK_URL}
-        VITE_KEYCLOAK_REALM: ${VITE_KEYCLOAK_REALM}
-        VITE_KEYCLOAK_CLIENT_ID: ${VITE_KEYCLOAK_CLIENT_ID}
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080}
     container_name: frontend
     depends_on:
-      - application
+      application:
+        condition: service_healthy
     ports:
-      - "80:8080"
+      - "80:80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - itdesk-network
 
@@ -73,4 +78,4 @@ networks:
 
 volumes:
   postgres_data:
-  keycloak_data:
+  attachments_data:
