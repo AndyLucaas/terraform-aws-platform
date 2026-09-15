@@ -35,9 +35,12 @@ backend:
 
   config:
     SERVER_PORT: "8080"
-    CORS_ALLOWED_ORIGINS: http://app.itticket.local
-    ATTACHMENTS_PATH: /var/itdesk/attachments
-    
+    CORS_ALLOWED_ORIGINS: "http://app.itticket.local"
+    ATTACHMENTS_PATH: "/var/itdesk/attachments"
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://itticket-postgresql:5432/itdesk"
+    SPRING_DATASOURCE_USERNAME: "postgres"
+    SPRING_DATASOURCE_PASSWORD: "postgres"
+
 postgresql:
   auth:
     enablePostgresUser: true
