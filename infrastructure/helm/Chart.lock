@@ -5,8 +5,8 @@ dependencies:
 - name: frontend
   repository: file://charts/frontend
   version: 0.1.0
-- name: keycloak
-  repository: oci://registry-1.docker.io/cloudpirates
-  version: 0.21.34
-digest: sha256:d5d053608b2fb13a51498b4a76981a4ec7149837e4f6f2ac41b01086dd1c88ac
-generated: "2026-09-08T16:05:10.729100444+03:00"
+- name: postgresql
+  repository: https://kubelauncher.github.io/charts
+  version: 0.4.3
+digest: sha256:1bc9d4fa428dcc8da69f0b658628fbdab5f335d0d8c2a1f55d38a27029856e14
+generated: "2026-09-15T12:10:33.334009634+03:00"

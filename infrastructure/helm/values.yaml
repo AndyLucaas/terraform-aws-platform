@@ -21,7 +21,7 @@ backend:
   image:
     repository: andylucas06/itdesk-backend
     pullPolicy: IfNotPresent
-    tag: 14
+    tag: latest
   
   ports:
     - name:  http-port
@@ -33,8 +33,18 @@ backend:
       targetPort: http-port
       protocol: TCP
 
-  config: {}
+  config:
+    SERVER_PORT: "8080"
+    CORS_ALLOWED_ORIGINS: http://app.itticket.local
+    ATTACHMENTS_PATH: /var/itdesk/attachments
     
+postgresql:
+  auth:
+    enablePostgresUser: true
+    username: "postgres"
+    password: "postgres"
+    database: "itdesk"
+
 ingress:
   enabled: true
   className: nginx
