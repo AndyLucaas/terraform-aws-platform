@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: staging
+data:
+  VITE_API_BASE_URL: "https://api-staging.itticket.local"
