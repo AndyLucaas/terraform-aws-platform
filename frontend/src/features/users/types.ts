@@ -33,3 +33,12 @@ export interface UserFormPayload {
   teamId?: number;
   roleCodes: AppRole[];
 }
+
+export interface UserCreatedResponse {
+  user: UserAccount;
+  temporaryPassword: string;
+}
+
+export interface TemporaryPasswordResponse {
+  temporaryPassword: string;
+}

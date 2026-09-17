@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuth } from '@/features/auth/AuthContext';
 import type { AppRole } from '@/features/auth/types';
 
 interface RoleGuardProps {

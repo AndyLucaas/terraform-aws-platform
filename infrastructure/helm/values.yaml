@@ -3,7 +3,7 @@ frontend:
   image:
     repository: andylucas06/itdesk-frontend
     pullPolicy: IfNotPresent
-    tag: latest
+    tag: 2
 
   ports:
     - name: http-port
@@ -21,7 +21,7 @@ backend:
   image:
     repository: andylucas06/itdesk-backend
     pullPolicy: IfNotPresent
-    tag: latest
+    tag: 1
   
   ports:
     - name:  http-port
@@ -39,13 +39,16 @@ backend:
     ATTACHMENTS_PATH: "/var/itdesk/attachments"
     DB_URL: "jdbc:postgresql://itticket-postgresql:5432/itdesk"
     DB_NAME: "itdesk"
-
+  volumes:
+    - name: attachments
+      emptyDir: {}
+  volumeMounts:
+    - name: attachments
+      mountPath: /var/itdesk/attachments
 postgresql:
   auth:
-    enablePostgresUser: true
-    username: "postgres"
-    password: "postgres"
-    database: "itdesk"
+    username: "itdesk"
+    password: "itdesk"
 
 ingress:
   enabled: true

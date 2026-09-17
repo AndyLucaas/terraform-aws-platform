@@ -1,0 +1,43 @@
+# Suppose un ingress-controller nginx déjà installé dans le cluster, et
+# cert-manager pour la génération automatique des certificats TLS.
+#
+# Remplacez itdesk.example.com / api.itdesk.example.com par vos vrais noms de
+# domaine, et reportez les mêmes valeurs dans :
+#   - backend-configmap.yaml (CORS_ALLOWED_ORIGINS)
+#   - le build-arg VITE_API_BASE_URL de l'image frontend
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: itdesk-ingress
+  namespace: itdesk
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: 15m
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - itdesk.example.com
+        - api.itdesk.example.com
+      secretName: itdesk-tls
+  rules:
+    - host: itdesk.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+    - host: api.itdesk.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: application
+                port:
+                  number: 8080

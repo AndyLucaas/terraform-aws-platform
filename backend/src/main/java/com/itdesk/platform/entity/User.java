@@ -22,14 +22,26 @@ public class User extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 255)
-    private String password;
-
     @Column(nullable = false, unique = true, length = 100)
     private String username;
 
     @Column(nullable = false, unique = true, length = 255)
     private String email;
+
+    /**
+     * Hash BCrypt du mot de passe — jamais le mot de passe en clair.
+     * Ne jamais sérialiser ce champ dans un DTO de réponse.
+     */
+    @Column(name = "password_hash", nullable = false, length = 255)
+    private String passwordHash;
+
+    /**
+     * Force le changement de mot de passe à la prochaine connexion — utilisé
+     * après une création de compte ou une réinitialisation par un administrateur.
+     */
+    @Column(name = "must_change_password", nullable = false)
+    @Builder.Default
+    private boolean mustChangePassword = true;
 
     @Column(name = "first_name", nullable = false, length = 100)
     private String firstName;

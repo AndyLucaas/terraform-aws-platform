@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "backend.name" . }}-cfg
+  name: {{ include "backend.fullname" . }}-cfg
   labels:
     {{- include "backend.selectorLabels" . | nindent 4 }}
 
