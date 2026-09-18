@@ -61,11 +61,9 @@ postgresql:
   volumeMounts:
     - name: data
       mountPath: /var/lib/postgresql/data
-      subPath: postgres
   volumes:
     - name: data
-      persistentVolumeClaim:
-        claimName: postgres-data
+      emptyDir: {}
 
 ingress:
   enabled: true
