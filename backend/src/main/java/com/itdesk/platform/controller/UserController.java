@@ -1,7 +1,9 @@
 package com.itdesk.platform.controller;
 
 import com.itdesk.platform.dto.common.PageResponse;
+import com.itdesk.platform.dto.user.TemporaryPasswordResponse;
 import com.itdesk.platform.dto.user.UserCreateRequest;
+import com.itdesk.platform.dto.user.UserCreatedResponse;
 import com.itdesk.platform.dto.user.UserResponse;
 import com.itdesk.platform.dto.user.UserUpdateRequest;
 import com.itdesk.platform.service.UserService;
@@ -39,9 +41,9 @@ public class UserController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    public ResponseEntity<UserResponse> create(@Valid @RequestBody UserCreateRequest request) {
-        UserResponse response = userService.create(request);
-        return ResponseEntity.created(URI.create("/api/v1/users/" + response.id())).body(response);
+    public ResponseEntity<UserCreatedResponse> create(@Valid @RequestBody UserCreateRequest request) {
+        UserCreatedResponse response = userService.create(request);
+        return ResponseEntity.created(URI.create("/api/v1/users/" + response.user().id())).body(response);
     }
 
     @PutMapping("/{id}")
@@ -66,9 +68,8 @@ public class UserController {
 
     @PostMapping("/{id}/reset-password")
     @PreAuthorize("hasRole('ADMINISTRATOR')")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void resetPassword(@PathVariable Long id) {
-        userService.resetPassword(id);
+    public TemporaryPasswordResponse resetPassword(@PathVariable Long id) {
+        return userService.resetPassword(id);
     }
 
     @DeleteMapping("/{id}")

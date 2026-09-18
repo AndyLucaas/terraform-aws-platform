@@ -1,7 +1,9 @@
 package com.itdesk.platform.service;
 
 import com.itdesk.platform.dto.common.PageResponse;
+import com.itdesk.platform.dto.user.TemporaryPasswordResponse;
 import com.itdesk.platform.dto.user.UserCreateRequest;
+import com.itdesk.platform.dto.user.UserCreatedResponse;
 import com.itdesk.platform.dto.user.UserProfileUpdateRequest;
 import com.itdesk.platform.dto.user.UserResponse;
 import com.itdesk.platform.dto.user.UserUpdateRequest;
@@ -63,7 +65,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse create(UserCreateRequest request) {
+    public UserCreatedResponse create(UserCreateRequest request) {
         if (userRepository.existsByUsernameIgnoreCase(request.username())) {
             throw new DuplicateResourceException("Le nom d'utilisateur '" + request.username() + "' est déjà utilisé");
         }
@@ -71,10 +73,9 @@ public class UserService {
             throw new DuplicateResourceException("L'email '" + request.email() + "' est déjà utilisé");
         }
 
-        String rawPassword = StringUtils.hasText(request.password()) ? request.password() : KeyGenerators.string().generateKey();
+        String temporaryPassword = KeyGenerators.string().generateKey();
 
         User user = User.builder()
-                .password(passwordEncoder.encode(rawPassword))
                 .username(request.username())
                 .email(request.email())
                 .firstName(request.firstName())
@@ -83,12 +84,15 @@ public class UserService {
                 .jobTitle(request.jobTitle())
                 .department(resolveDepartment(request.departmentId()))
                 .team(resolveTeam(request.teamId()))
+                .passwordHash(passwordEncoder.encode(temporaryPassword))
+                .mustChangePassword(true)
                 .status(UserStatus.ACTIVE)
                 .available(true)
                 .roles(resolveRoles(request.roleCodes()))
                 .build();
 
-        return userMapper.toResponse(userRepository.save(user));
+        User saved = userRepository.save(user);
+        return new UserCreatedResponse(userMapper.toResponse(saved), temporaryPassword);
     }
 
     @Transactional
@@ -140,10 +144,12 @@ public class UserService {
     }
 
     @Transactional
-    public void resetPassword(Long id) {
+    public TemporaryPasswordResponse resetPassword(Long id) {
         User user = getOrThrow(id);
         String temporaryPassword = KeyGenerators.string().generateKey();
-        user.setPassword(passwordEncoder.encode(temporaryPassword));
+        user.setPasswordHash(passwordEncoder.encode(temporaryPassword));
+        user.setMustChangePassword(true);
+        return new TemporaryPasswordResponse(temporaryPassword);
     }
 
     @Transactional

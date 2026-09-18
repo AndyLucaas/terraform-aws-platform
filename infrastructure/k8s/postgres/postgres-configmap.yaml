@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: itdesk
+data:
+  POSTGRES_DB: itdesk

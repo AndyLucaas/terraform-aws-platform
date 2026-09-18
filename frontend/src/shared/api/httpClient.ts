@@ -1,5 +1,6 @@
-import axios, { type InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { authApi } from '@/features/auth/authApi';
+import { tokenStorage } from '@/features/auth/tokenStorage';
 
 export const httpClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -7,65 +8,66 @@ export const httpClient = axios.create({
 });
 
 httpClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('access_token');
-  if (token) {
-    config.headers.set('Authorization', `Bearer ${token}`);
+  const accessToken = tokenStorage.getAccessToken();
+  if (accessToken) {
+    config.headers.set('Authorization', `Bearer ${accessToken}`);
   }
   return config;
 });
 
-let isRefreshing = false;
-let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: unknown) => void }> = [];
+/**
+ * Un seul rafraîchissement à la fois : si plusieurs requêtes échouent
+ * simultanément en 401 (cas courant au chargement d'une page qui appelle
+ * plusieurs endpoints), elles attendent toutes le même refresh au lieu d'en
+ * déclencher un chacune.
+ */
+let refreshPromise: Promise<string> | null = null;
 
-const processQueue = (error: unknown, token: string | null = null) => {
-  failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else if (token) {
-      prom.resolve(token);
+function refreshAccessToken(): Promise<string> {
+  if (!refreshPromise) {
+    const refreshToken = tokenStorage.getRefreshToken();
+    if (!refreshToken) {
+      return Promise.reject(new Error('Aucun refresh token disponible'));
     }
-  });
-  failedQueue = [];
-};
+
+    refreshPromise = authApi
+      .refresh(refreshToken)
+      .then((response) => {
+        tokenStorage.setAccessToken(response.accessToken);
+        return response.accessToken;
+      })
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+  return refreshPromise;
+}
+
+function redirectToLogin(): void {
+  tokenStorage.clear();
+  if (window.location.pathname !== '/login') {
+    window.location.assign('/login');
+  }
+}
 
 httpClient.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retried?: boolean };
 
-    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('/api/v1/auth/login')) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers.set('Authorization', `Bearer ${token}`);
-            return httpClient(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      try {
-        const authData = await authApi.refreshToken();
-        isRefreshing = false;
-        processQueue(null, authData.accessToken);
-        originalRequest.headers.set('Authorization', `Bearer ${authData.accessToken}`);
-        return httpClient(originalRequest);
-      } catch (refreshError) {
-        isRefreshing = false;
-        processQueue(refreshError, null);
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        if (window.location.pathname !== '/login') {
-          window.location.href = '/login';
-        }
-        return Promise.reject(refreshError);
-      }
+    if (error.response?.status !== 401 || !originalRequest || originalRequest._retried) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    originalRequest._retried = true;
+
+    try {
+      const accessToken = await refreshAccessToken();
+      originalRequest.headers.set('Authorization', `Bearer ${accessToken}`);
+      return httpClient(originalRequest);
+    } catch {
+      redirectToLogin();
+      return Promise.reject(error);
+    }
   },
 );

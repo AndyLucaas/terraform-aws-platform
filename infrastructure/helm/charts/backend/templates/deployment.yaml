@@ -40,9 +40,9 @@ spec:
           
           envFrom:
             - configMapRef:
-                name: {{ include "backend.name" . }}-cfg
+                name: {{ include "backend.fullname" . }}-cfg
             - secretRef:
-                name: {{ include "backend.name" . }}-secret
+                name: {{ include "backend.fullname" . }}-secret
                 
           {{- if eq .Values.environment "production" }}
           {{- with .Values.livenessProbe }}

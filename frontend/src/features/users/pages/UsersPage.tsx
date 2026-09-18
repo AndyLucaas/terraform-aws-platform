@@ -19,6 +19,7 @@ import {
   useUsers,
 } from '../hooks';
 import { UserFormModal } from '../components/UserFormModal';
+import { TemporaryPasswordModal } from '../components/TemporaryPasswordModal';
 import type { UserAccount } from '../types';
 
 const STATUS_TONE = {
@@ -39,6 +40,7 @@ export function UsersPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserAccount | undefined>(undefined);
   const [userToDelete, setUserToDelete] = useState<UserAccount | undefined>(undefined);
+  const [temporaryPassword, setTemporaryPassword] = useState<{ username: string; password: string } | undefined>(undefined);
 
   const { push } = useToast();
   const { data, isLoading } = useUsers(query, page);
@@ -107,9 +109,9 @@ export function UsersPage() {
           )}
           <button
             title="Réinitialiser le mot de passe"
-            onClick={() => {
-              resetPassword.mutate(user.id);
-              push({ tone: 'success', title: 'Email de réinitialisation envoyé' });
+            onClick={async () => {
+              const result = await resetPassword.mutateAsync(user.id);
+              setTemporaryPassword({ username: user.username, password: result.temporaryPassword });
             }}
             className="rounded p-1.5 text-text-secondary hover:bg-surface hover:text-info"
           >
@@ -133,8 +135,8 @@ export function UsersPage() {
         await updateUser.mutateAsync(values);
         push({ tone: 'success', title: 'Utilisateur mis à jour' });
       } else {
-        await createUser.mutateAsync(values);
-        push({ tone: 'success', title: 'Utilisateur créé' });
+        const created = await createUser.mutateAsync(values);
+        setTemporaryPassword({ username: created.user.username, password: created.temporaryPassword });
       }
       setModalOpen(false);
       setEditingUser(undefined);
@@ -175,6 +177,15 @@ export function UsersPage() {
         existingUser={editingUser}
         isSubmitting={createUser.isPending || updateUser.isPending}
       />
+
+      {temporaryPassword && (
+        <TemporaryPasswordModal
+          open
+          username={temporaryPassword.username}
+          temporaryPassword={temporaryPassword.password}
+          onClose={() => setTemporaryPassword(undefined)}
+        />
+      )}
 
       <ConfirmDialog
         open={Boolean(userToDelete)}

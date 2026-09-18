@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: itdesk
+resources:
+  - 00-namespace.yaml
+  - postgres/postgres-secret.yaml
+  - postgres/postgres-configmap.yaml
+  - postgres/postgres-pvc.yaml
+  - postgres/postgres-deployment.yaml
+  - postgres/postgres-service.yaml
+  - backend/backend-configmap.yaml
+  - backend/backend-secret.yaml
+  - backend/backend-attachments-pvc.yaml
+  - backend/backend-deployment.yaml
+  - backend/backend-service.yaml
+  - frontend/frontend-deployment.yaml
+  - frontend/frontend-service.yaml
+  - ingress.yaml

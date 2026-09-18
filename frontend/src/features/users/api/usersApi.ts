@@ -1,6 +1,6 @@
 import { httpClient } from '@/shared/api/httpClient';
 import type { PageResponse } from '@/shared/types/pagination';
-import type { UserAccount, UserFormPayload } from '../types';
+import type { TemporaryPasswordResponse, UserAccount, UserCreatedResponse, UserFormPayload } from '../types';
 
 export const usersApi = {
   search: async (query: string, page: number): Promise<PageResponse<UserAccount>> => {
@@ -10,8 +10,8 @@ export const usersApi = {
     return data;
   },
 
-  create: async (payload: UserFormPayload & { username: string }): Promise<UserAccount> => {
-    const { data } = await httpClient.post<UserAccount>('/api/v1/users', payload);
+  create: async (payload: UserFormPayload & { username: string }): Promise<UserCreatedResponse> => {
+    const { data } = await httpClient.post<UserCreatedResponse>('/api/v1/users', payload);
     return data;
   },
 
@@ -28,8 +28,9 @@ export const usersApi = {
     await httpClient.post(`/api/v1/users/${id}/unblock`);
   },
 
-  resetPassword: async (id: number): Promise<void> => {
-    await httpClient.post(`/api/v1/users/${id}/reset-password`);
+  resetPassword: async (id: number): Promise<TemporaryPasswordResponse> => {
+    const { data } = await httpClient.post<TemporaryPasswordResponse>(`/api/v1/users/${id}/reset-password`);
+    return data;
   },
 
   remove: async (id: number): Promise<void> => {

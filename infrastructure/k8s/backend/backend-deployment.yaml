@@ -1,0 +1,78 @@
+# NOTE — AttachmentService stocke les pièces jointes sur disque local
+# (/var/itdesk/attachments). Avec un volume ReadWriteOnce, un seul pod peut
+# le monter à la fois : ce Deployment reste donc à 1 réplique. Pour scaler
+# horizontalement en production, il faudrait migrer AttachmentService vers un
+# stockage objet (S3, MinIO...) plutôt que le système de fichiers local.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: application
+  namespace: itdesk
+  labels:
+    app.kubernetes.io/name: application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: application
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: application
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: application
+          image: REGISTRY/it-ticketing-platform-backend:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: backend-config
+            - secretRef:
+                name: backend-secret
+          volumeMounts:
+            - name: attachments
+              mountPath: /var/itdesk/attachments
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 40
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 250m
+              memory: 384Mi
+            limits:
+              cpu: 1
+              memory: 768Mi
+      volumes:
+        - name: attachments
+          persistentVolumeClaim:
+            claimName: backend-attachments

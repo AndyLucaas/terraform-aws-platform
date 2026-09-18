@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Ticket, Users, Building2, Tags } from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuth } from '@/features/auth/AuthContext';
 import type { AppRole } from '@/features/auth/types';
 
 interface NavItem {

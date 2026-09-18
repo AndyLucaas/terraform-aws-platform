@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { SearchBar } from '@/shared/ui/SearchBar';
 import { Avatar } from '@/shared/ui/Avatar';
 import { NotificationBell } from '@/features/notifications/components/NotificationBell';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuth } from '@/features/auth/AuthContext';
 
 export function Navbar() {
   const { identity, logout } = useAuth();
@@ -48,7 +48,10 @@ export function Navbar() {
                 Mon profil
               </button>
               <button
-                onClick={logout}
+                onClick={() => {
+                  logout();
+                  navigate('/login', { replace: true });
+                }}
                 className="flex w-full items-center gap-2 border-t border-border px-4 py-2.5 text-sm text-error hover:bg-surface"
               >
                 <LogOut className="h-4 w-4" />
