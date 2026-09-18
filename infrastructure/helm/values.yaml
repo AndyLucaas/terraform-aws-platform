@@ -46,9 +46,7 @@ backend:
     - name: attachments
       mountPath: /var/itdesk/attachments
 postgresql:
-  auth:
-    username: "itdesk"
-    password: "itdesk"
+  
 
 ingress:
   enabled: true
