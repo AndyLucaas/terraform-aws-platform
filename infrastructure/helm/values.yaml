@@ -27,7 +27,6 @@ backend:
     - name:  http-port
       containerPort: 8080
       protocol: TCP
-  
   service:
     - port: 8080
       targetPort: http-port
@@ -37,7 +36,7 @@ backend:
     SERVER_PORT: "8080"
     CORS_ALLOWED_ORIGINS: "http://app.itticket.local"
     ATTACHMENTS_PATH: "/var/itdesk/attachments"
-    DB_URL: "jdbc:postgresql://itticket-postgresql:5432/itdesk"
+    DB_URL: "jdbc:postgresql://itticket-postgresql-svc:5432/itdesk"
     DB_NAME: "itdesk"
   volumes:
     - name: attachments
@@ -45,8 +44,28 @@ backend:
   volumeMounts:
     - name: attachments
       mountPath: /var/itdesk/attachments
+
 postgresql:
-  
+  image: 
+    repository: postgres
+    tag: 16-alpine
+    pullPolicy: IfNotPresent
+  service:
+    - port: 5432
+      targetPort: http
+      protocol: TCP
+  ports:
+    - name: http
+      containerPort: 5432
+      protocol: TCP
+  volumeMounts:
+    - name: data
+      mountPath: /var/lib/postgresql/data
+      subPath: postgres
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: postgres-data
 
 ingress:
   enabled: true

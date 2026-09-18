@@ -6,7 +6,7 @@ dependencies:
   repository: file://charts/frontend
   version: 0.1.0
 - name: postgresql
-  repository: https://kubelauncher.github.io/charts
-  version: 0.4.3
-digest: sha256:1bc9d4fa428dcc8da69f0b658628fbdab5f335d0d8c2a1f55d38a27029856e14
-generated: "2026-09-15T12:10:33.334009634+03:00"
+  repository: file://charts/postgresql
+  version: 0.1.0
+digest: sha256:b71200a8d6f5128f4e57f803f9a394ac3023429c70859bcb03743607bde7e8c7
+generated: "2026-09-18T16:54:10.455151912+03:00"
