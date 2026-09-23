@@ -2,11 +2,10 @@ module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
   name = "webapp-vpc"
-  cidr = "10.0.0.0/16"
+  cidr = var.cidr
 
-  azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  azs             = data.aws_availability_zones.azs.names
+  private_subnets = var.private_subnets
 
   enable_nat_gateway = true
   enable_vpn_gateway = false
@@ -17,40 +16,37 @@ module "vpc" {
   }
 }
 
-module "sg" {
-  source = "terraform-aws-modules/security-group/aws"
 
-  name        = "webapp-sg"
-  description = "Security Group for Web App"
-  vpc_id      = module.vpc.vpc_id
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 21.0"
 
-  ingress_rules = {
-    http = {
-      from_port   = 8080
-      ip_protocol = "tcp"
-      cidr_ipv4   = "0.0.0.0/0"
-      description = "Web App from internal"
-    }
-    https = {
-      from_port   = 443
-      ip_protocol = "tcp"
-      cidr_ipv4   = "0.0.0.0/0"
-      description = "Web App HTTPS from internal"
-    }
+  name               = "eks-cluster"
+  kubernetes_version = "1.33"
+
+  compute_config = {
+    enabled    = true
+    node_pools = ["node_group"]
   }
 
-  egress_rules = {
-    all = {
-      ip_protocol = "-1"
-      cidr_ipv4   = "0.0.0.0/0"
-    }
-  }
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = var.private_subnets
 
+  eks_managed_node_groups = {
+    node_group = {
+      # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
+      ami_type       = "AL2023_x86_64_STANDARD"
+      instance_types = ["t3.micro"]
+
+      min_size     = 2
+      max_size     = 4
+      desired_size = 2
+    }
+
+  }
   tags = {
-    Name = "webapp-sg"
+    Environment = "dev"
+    Terraform   = "true"
   }
 }
 
-module "alb" {
-  
-}
