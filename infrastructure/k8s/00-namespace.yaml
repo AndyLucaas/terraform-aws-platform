@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: itdesk
-  labels:
-    app.kubernetes.io/part-of: it-ticketing-platform
