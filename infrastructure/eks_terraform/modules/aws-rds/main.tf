@@ -31,6 +31,6 @@ resource "aws_db_instance" "postgres" {
   username             = locals.rds_secret.username
   password             = locals.rds_secret.password
   port                 = var.db_port
+
+  skip_final_snapshot  = tru
   
-  skip_final_snapshot  = true
-}
