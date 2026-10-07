@@ -133,18 +133,8 @@ resource "aws_route_table" "route2" {
     Name = var.private_rt_name
   }
 }
-#route table from public subnet2 to internet gateway =========================================
-resource "aws_route_table_association" "route_association" {
-  subnet_id = aws_subnet.public_subnet2.id
-  route_table_id = aws_route_table.route1.id
-
-  tags = {
-    Name = var.pb_rt_ass1_name
-  }
-}
-
-#route table association for nat gateway to internet gateway =========================================
-resource "aws_route_table_association" "route_association" {
+#route table from public subnet1 to internet gateway =========================================
+resource "aws_route_table_association" "route_association1" {
   subnet_id = aws_subnet.public_subnet1.id
   route_table_id = aws_route_table.route1.id
 
@@ -153,8 +143,18 @@ resource "aws_route_table_association" "route_association" {
   }
 }
 
+#route table association for nat gateway to internet gateway =========================================
+resource "aws_route_table_association" "route_association2" {
+  subnet_id = aws_subnet.public_subnet2.id
+  route_table_id = aws_route_table.route1.id
+
+  tags = {
+    Name = var.pb_rt_ass1_name
+  }
+}
+
 # route for private subnets to access internet via ngw =========================================
-resource "aws_route_table_association" "route_assocition1" {
+resource "aws_route_table_association" "route_assocition3" {
   subnet_id      = aws_subnet.private_subnet1.id
   route_table_id = aws_route_table.route2.id
 
@@ -163,7 +163,7 @@ resource "aws_route_table_association" "route_assocition1" {
   }
 }   
 
-resource "aws_route_table_association" "route_association2" {
+resource "aws_route_table_association" "route_association4" {
   subnet_id      = aws_subnet.private_subnet2.id
   route_table_id = aws_route_table.route2.id
 
