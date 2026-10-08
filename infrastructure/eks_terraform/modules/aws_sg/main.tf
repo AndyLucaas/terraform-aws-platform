@@ -1,16 +1,14 @@
 # sg for eks cluster .....................
 resource "aws_security_group" "sg_eks" {
   name        = var.sg_eks_name
-  description = var.sg_eks_description
-  vpc_id      = var.vpc_id
+  description = "security group for eks"
+  vpc_id      = aws_vpc.vpc.id
 
-  tags = merge(
+  tags =
     {
       Name = var.sg_eks_name
       managed_by = "Terraform"
-    },
-    var.tags,
-  )
+    }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "sg_http_ingress" {
@@ -41,11 +39,11 @@ resource "aws_vpc_security_group_ingress_rule" "sg_https_ingress" {
   }
 }
 
-#sg for rds ...............................
+#sg for rds ===========================================
 resource "aws_security_group" "sg_rds" {
   name        = var.sg_rds_name
-  description = var.sg_rds_description
-  vpc_id      = var.vpc_id
+  description = "security group for rds"
+  vpc_id      = aws_vpc.vpc.id
 
   tags = 
     {

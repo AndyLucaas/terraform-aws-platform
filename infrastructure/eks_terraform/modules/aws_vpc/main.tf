@@ -9,6 +9,7 @@ resource "aws_vpc" "web_srv_vpc" {
     }
 }
 
+#internet gateway ======================================
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.web_srv_vpc.id
 
@@ -44,25 +45,25 @@ resource "aws_subnet" "ngw_subnet" {
 }
 
 # subnets for eks ======================================
-resource "aws_subnet" "private_subnet1" {
+resource "aws_subnet" "eks_subnet1" {
   vpc_id     = aws_vpc.web_srv_vpc.id
-  cidr_block = var.private_subnet1_cidr
+  cidr_block = var.eks_subnet1_cidr
   availability_zone = var.az1
 
   tags = {
-    Name = var.private_subnet1_name
+    Name = var.eks_subnet1_name
     "kubernetes.io/role/internal-elb"             = "1"  
   }
 
 }
 
-resource "aws_subnet" "private_subnet2" {
+resource "aws_subnet" "eks_subnet2" {
   vpc_id     = aws_vpc.web_srv_vpc.id
-  cidr_block = var.private_subnet2_cidr
+  cidr_block = var.eks_subnet2_cidr
   availability_zone = var.az2
 
   tags = {
-    Name = var.private_subnet2_name
+    Name = var.eks_subnet2_name
     "kubernetes.io/role/internal-elb"             = "1"  
   }
 
@@ -117,7 +118,7 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.igw.id
   }
   tags = {
-    Name = var.private_rt_name
+    Name = var.route_to_igw_name
   }
 }
 
@@ -130,7 +131,7 @@ resource "aws_route_table" "private" {
     nat_gateway_id = aws_nat_gateway.nat_gw.id
   }
   tags = {
-    Name = var.private_rt_name
+    Name = var.route_to_ngw_name
   }
 }
 #route table from public subnet1 to internet gateway =========================================
