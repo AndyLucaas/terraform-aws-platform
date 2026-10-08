@@ -35,19 +35,19 @@ variable "NGW_SUBNET_NAME" {
   type = string
 }
 
-variable "PRIVATE_SUBNET1_CIDR" {
+variable "EKS_SUBNET1_CIDR" {
   type = string
 }
 
-variable "PRIVATE_SUBNET1_NAME" {
+variable "EKS_SUBNET1_NAME" {
   type = string
 }
 
-variable "PRIVATE_SUBNET2_CIDR" {
+variable "EKS_SUBNET2_CIDR" {
   type = string
 }
 
-variable "PRIVATE_SUBNET2_NAME" {
+variable "EKS_SUBNET2_NAME" {
   type = string
 }
 

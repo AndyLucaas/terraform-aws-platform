@@ -24,10 +24,10 @@ module "vpc" {
   ngw_subnet_name = var.NGW_SUBNET_NAME
 
   # subnets for eks ======================================
-  eks_subnet1_cidr = var.PRIVATE_SUBNET1_CIDR
-  eks_subnet1_name = var.PRIVATE_SUBNET1_NAME
-  eks_subnet2_cidr = var.PRIVATE_SUBNET2_CIDR
-  eks_subnet2_name = var.PRIVATE_SUBNET2_NAME
+  eks_subnet1_cidr = var.EKS_SUBNET1_CIDR
+  eks_subnet1_name = var.EKS_SUBNET1_NAME
+  eks_subnet2_cidr = var.EKS_SUBNET2_CIDR
+  eks_subnet2_name = var.EKS_SUBNET2_NAME
 
   #subnets for rds ======================================
   private_subnet3_cidr = var.PRIVATE_SUBNET3_CIDR
@@ -44,7 +44,6 @@ module "vpc" {
   route_to_igw_name = var.ROUTE_TO_IGW_NAME
   route_to_ngw_name = var.ROUTE_TO_NGW_NAME
 
-  tags = local.common_tags
 }
 module "iam" {
   source = "./modules/aws_iam"

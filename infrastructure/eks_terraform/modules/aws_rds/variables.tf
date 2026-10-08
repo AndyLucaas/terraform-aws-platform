@@ -1,16 +1,11 @@
-variable "db_password_secret_name" {
-  description = "The Secrets Manager secret name for the database credentials"
-  type        = string
-}
-
 variable "db_name" {
-  description = "The database name"
-  type        = string
-  default     = "postgres"
+  type = string
 }
 
 variable "db_port" {
-  description = "The port on which the DB instance accepts connections"
-  type        = number
-  default     = 5432
+  type = number
+}
+
+variable "db_password_secret_name" {
+  type = string
 }

@@ -1,125 +1,87 @@
 variable "vpc_cidr_block" {
-  description = "The CIDR block for the VPC"
-  type        = string
-  default     = "10.0.0.0/16"
+  type = string
 }
 
 variable "vpc_name" {
-  description = "The name tag for the VPC"
-  type        = string
-  default     = "web-srv-vpc"
+  type = string
 }
 
 variable "igw_name" {
-  description = "The name tag for the Internet Gateway"
-  type        = string
-  default     = "igw"
+  type = string
 }
 
 variable "alb_subnet_cidr" {
-  description = "The CIDR block for the Application Load Balancer subnet"
-  type        = string
-  default     = "10.0.1.0/24"
+  type = string
 }
 
 variable "az1" {
-  description = "The first availability zone"
-  type        = string
-  default     = "eu-north-1a"
+  type = string
 }
 
 variable "alb_subnet_name" {
-  description = "The name tag for the ALB subnet"
-  type        = string
-  default     = "alb-subnet"
+  type = string
 }
 
 variable "ngw_subnet_cidr" {
-  description = "The CIDR block for the NAT Gateway subnet"
-  type        = string
-  default     = "10.0.2.0/24"
+  type = string
 }
 
 variable "az2" {
-  description = "The second availability zone"
-  type        = string
-  default     = "eu-north-1b"
+  type = string
 }
 
 variable "ngw_subnet_name" {
-  description = "The name tag for the NAT Gateway subnet"
-  type        = string
-  default     = "ngw-subnet"
+  type = string
 }
 
-variable "private_subnet1_cidr" {
-  description = "The CIDR block for private subnet 1"
-  type        = string
-  default     = "10.0.3.0/24"
+variable "eks_subnet1_cidr" {
+  type = string
 }
 
-variable "private_subnet1_name" {
-  description = "The name tag for private subnet 1"
-  type        = string
-  default     = "private-subnet-1"
+variable "eks_subnet1_name" {
+  type = string
 }
 
-variable "private_subnet2_cidr" {
-  description = "The CIDR block for private subnet 2"
-  type        = string
-  default     = "10.0.4.0/24"
+variable "eks_subnet2_cidr" {
+  type = string
 }
 
-variable "private_subnet2_name" {
-  description = "The name tag for private subnet 2"
-  type        = string
-  default     = "private-subnet-2"
+variable "eks_subnet2_name" {
+  type = string
 }
 
 variable "private_subnet3_cidr" {
-  description = "The CIDR block for private subnet 3"
-  type        = string
-  default     = "10.0.5.0/24"
+  type = string
 }
 
 variable "private_subnet3_name" {
-  description = "The name tag for private subnet 3"
-  type        = string
-  default     = "private-subnet-3"
+  type = string
 }
 
 variable "private_subnet4_cidr" {
-  description = "The CIDR block for private subnet 4"
-  type        = string
-  default     = "10.0.6.0/24"
+  type = string
 }
 
 variable "private_subnet4_name" {
-  description = "The name tag for private subnet 4"
-  type        = string
-  default     = "private-subnet-4"
+  type = string
 }
 
 variable "nat_eip_name" {
-  description = "The name tag for the NAT Gateway Elastic IP"
-  type        = string
-  default     = "nat-eip"
+  type = string
 }
 
 variable "nat_gw_name" {
-  description = "The name tag for the NAT Gateway"
-  type        = string
-  default     = "nat-gw"
+  type = string
 }
 
 variable "route_cidr" {
-  description = "The destination CIDR block for the route table entries"
-  type        = string
-  default     = "0.0.0.0/0"
+  type = string
 }
 
-variable "private_rt_name" {
-  description = "The name tag for the route tables"
-  type        = string
-  default     = "private-rt"
+variable "route_to_igw_name" {
+  type = string
+}
+
+variable "route_to_ngw_name" {
+  type = string
 }
