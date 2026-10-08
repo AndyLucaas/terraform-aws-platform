@@ -1,93 +1,172 @@
 # VPC ===========================================================================
-variable "vpc_cidr_block" {
+variable "VPC_CIDR" {
   type = string
 }
 
-variable "vpc_name" {
+variable "VPC_NAME" {
   type = string
 }
 
-variable "igw_name" {
+variable "IGW_NAME" {
   type = string
 }
 
-variable "alb_subnet_cidr" {
+variable "ALB_SUBNET_CIDR" {
   type = string
 }
 
-variable "az1" {
+variable "AZ1" {
   type = string
 }
 
-variable "alb_subnet_name" {
+variable "ALB_SUBNET_NAME" {
   type = string
 }
 
-variable "ngw_subnet_cidr" {
+variable "NGW_SUBNET_CIDR" {
   type = string
 }
 
-variable "az2" {
+variable "AZ2" {
   type = string
 }
 
-variable "ngw_subnet_name" {
+variable "NGW_SUBNET_NAME" {
   type = string
 }
 
-variable "private_subnet1_cidr" {
+variable "PRIVATE_SUBNET1_CIDR" {
   type = string
 }
 
-variable "private_subnet1_name" {
+variable "PRIVATE_SUBNET1_NAME" {
   type = string
 }
 
-variable "private_subnet2_cidr" {
+variable "PRIVATE_SUBNET2_CIDR" {
   type = string
 }
 
-variable "private_subnet2_name" {
+variable "PRIVATE_SUBNET2_NAME" {
   type = string
 }
 
-variable "private_subnet3_cidr" {
+variable "PRIVATE_SUBNET3_CIDR" {
   type = string
 }
 
-variable "private_subnet3_name" {
+variable "PRIVATE_SUBNET3_NAME" {
   type = string
 }
 
-variable "private_subnet4_cidr" {
+variable "PRIVATE_SUBNET4_CIDR" {
   type = string
 }
 
-variable "private_subnet4_name" {
+variable "PRIVATE_SUBNET4_NAME" {
   type = string
 }
 
-variable "nat_eip_name" {
+variable "NAT_EIP_NAME" {
   type = string
 }
 
-variable "nat_gw_name" {
+variable "NAT_GW_NAME" {
   type = string
 }
 
-variable "route_cidr" {
+variable "ROUTE_CIDR" {
   type = string
 }
 
-variable "route_to_igw_name" {
+variable "ROUTE_TO_IGW_NAME" {
   type = string
 }
 
-variable "route_to_ngw_name" {
+variable "ROUTE_TO_NGW_NAME" {
   type = string
 }
 
-variable "tags" {
-  type = map(string)
+variable "IAM_ROLE_NAME" {
+  type = string
 }
 
+variable "IAM_POLICY_NAME" {
+  type = string
+}
+
+variable "SG_EKS_NAME" {
+  type = string
+}
+
+variable "HTTP_INGRESS_FROM_PORT" {
+  type = number
+}
+
+variable "HTTP_INGRESS_TO_PORT" {
+  type = number
+}
+
+variable "HTTP_INGRESS_PROTOCOL" {
+  type = string
+}
+
+variable "HTTP_INGRESS_CIDR_BLOCK" {
+  type = string
+}
+
+variable "HTTPS_INGRESS_FROM_PORT" {
+  type = number
+}
+
+variable "HTTPS_INGRESS_TO_PORT" {
+  type = number
+}
+
+variable "HTTPS_INGRESS_PROTOCOL" {
+  type = string
+}
+
+variable "HTTPS_INGRESS_CIDR_BLOCK" {
+  type = string
+}
+
+variable "SG_RDS_NAME" {
+  type = string
+}
+
+variable "RDS_INGRESS_FROM_PORT" {
+  type = number
+}
+
+variable "RDS_INGRESS_TO_PORT" {
+  type = number
+}
+
+variable "RDS_INGRESS_PROTOCOL" {
+  type = string
+}
+
+variable "EKS_CLUSTER_NAME" {
+  type = string
+}
+
+variable "EKS_NODE_GROUP_NAME" {
+  type = string
+}
+
+variable "EKS_INSTANCE_TYPE" {
+  type = string
+}
+
+variable "DB_NAME" {
+  type = string
+}
+
+variable "DB_PORT" {
+  type = number
+}
+
+variable "DB_PASSWORD_SECRET_NAME" {
+  type = string
+}
