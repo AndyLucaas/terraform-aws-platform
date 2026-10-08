@@ -1,4 +1,8 @@
 # VPC ===========================================================================
+variable "aws_region" {
+  type = string
+}
+
 variable "VPC_CIDR" {
   type = string
 }
