@@ -14,7 +14,7 @@ resource "aws_security_group" "sg_eks" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "sg_http_ingress" {
-  description       = "allow HTTP trafics"
+  description       = "allow http trafics"
   from_port         = var.http_ingress_from_port
   to_port           = var.http_ingress_to_port
   ip_protocol       = var.http_ingress_protocol
@@ -28,7 +28,7 @@ resource "aws_vpc_security_group_ingress_rule" "sg_http_ingress" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "sg_https_ingress" {
-  description       = "allow HTTPS trafics"
+  description       = "allow https trafics"
   from_port         = var.https_ingress_from_port
   to_port           = var.https_ingress_to_port
   ip_protocol       = var.https_ingress_protocol
@@ -55,7 +55,7 @@ resource "aws_security_group" "sg_rds" {
 
 }
 resource "aws_vpc_security_group_ingress_rule" "sg_rds_ingress" {
-  description       = "allow RDS from eks only"
+  description       = "allow connexion to rds from eks only"
   from_port         = var.rds_ingress_from_port
   to_port           = var.rds_ingress_to_port
   ip_protocol       = var.rds_ingress_protocol

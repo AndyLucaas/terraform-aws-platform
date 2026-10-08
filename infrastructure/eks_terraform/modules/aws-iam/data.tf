@@ -5,7 +5,7 @@ data "aws_iam_policy_document" "read_policy" {
       "secretsmanager:GetSecretValue",
     ]
     resources = [
-      "arn:aws:secretsmanager:${var.region}:123456789012:secret:my-secret",
+      "arn:aws:secretsmanager:eu-north-1:401811812804:secret:prod/secret/database-8rSFgB",
     ]
   }
 }
