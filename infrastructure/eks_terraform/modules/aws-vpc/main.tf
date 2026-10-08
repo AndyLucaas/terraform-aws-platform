@@ -19,25 +19,25 @@ resource "aws_internet_gateway" "igw" {
 }
 
 # subnet for load balancer ======================================
-resource "aws_subnet" "public_subnet1" {
+resource "aws_subnet" "alb_subnet" {
   vpc_id     = aws_vpc.web_srv_vpc.id
-  cidr_block = var.public_subnet1_cidr
+  cidr_block = var.alb_subnet_cidr
   availability_zone = var.az1
 
   tags = {
-    Name = var.public_subnet1_name
+    Name = var.alb_subnet_name
     "kubernetes.io/role/elb" = "1"
   }
 
 }
 # subnet for gateway ======================================
-resource "aws_subnet" "public_subnet2" {
+resource "aws_subnet" "ngw_subnet" {
   vpc_id     = aws_vpc.web_srv_vpc.id
-  cidr_block = var.public_subnet2_cidr
+  cidr_block = var.ngw_subnet_cidr
   availability_zone = var.az2
 
   tags = {
-    Name = var.public_subnet2_name
+    Name = var.ngw_subnet_name
     "kubernetes.io/role/elb" = "1"
   }
 
@@ -102,14 +102,14 @@ resource "aws_eip" "nat_eip" {
 
 resource "aws_nat_gateway" "nat_gw" {
   allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.public_subnet1.id
+  subnet_id     = aws_subnet.ngw_subnet.id
 
   tags = {
     Name = var.nat_gw_name
   }
 }
 # route table to get to internet gateway =========================================
-resource "aws_route_table" "route1" {
+resource "aws_route_table" "public" {
   vpc_id = aws_vpc.web_srv_vpc.id
 
   route {
@@ -122,7 +122,7 @@ resource "aws_route_table" "route1" {
 }
 
 #route private subnet to nat gateway =========================================
-resource "aws_route_table" "route2" {
+resource "aws_route_table" "private" {
   vpc_id = aws_vpc.web_srv_vpc.id
 
   route {
@@ -134,41 +134,25 @@ resource "aws_route_table" "route2" {
   }
 }
 #route table from public subnet1 to internet gateway =========================================
-resource "aws_route_table_association" "route_association1" {
-  subnet_id = aws_subnet.public_subnet1.id
-  route_table_id = aws_route_table.route1.id
-
-  tags = {
-    Name = var.pb_rt_ass1_name
-  }
+resource "aws_route_table_association" "alb_to_igw" {
+  subnet_id = aws_subnet.alb_subnet.id
+  route_table_id = aws_route_table.public.id
 }
 
 #route table association for nat gateway to internet gateway =========================================
-resource "aws_route_table_association" "route_association2" {
-  subnet_id = aws_subnet.public_subnet2.id
-  route_table_id = aws_route_table.route1.id
-
-  tags = {
-    Name = var.pb_rt_ass1_name
-  }
+resource "aws_route_table_association" "ngw_to_igw" {
+  subnet_id = aws_subnet.ngw_subnet.id
+  route_table_id = aws_route_table.public.id
 }
 
 # route for private subnets to access internet via ngw =========================================
 resource "aws_route_table_association" "route_assocition3" {
   subnet_id      = aws_subnet.private_subnet1.id
-  route_table_id = aws_route_table.route2.id
-
-  tags = {
-    Name = var.public_rt_assoc1_name
-  }
+  route_table_id = aws_route_table.private.id
 }   
 
 resource "aws_route_table_association" "route_association4" {
   subnet_id      = aws_subnet.private_subnet2.id
-  route_table_id = aws_route_table.route2.id
-
-  tags = {
-    Name = var.private_rt_assoc2_name
-  }
+  route_table_id = aws_route_table.private.id
 }
 
