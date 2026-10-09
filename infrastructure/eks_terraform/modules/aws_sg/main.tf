@@ -20,7 +20,7 @@ resource "aws_vpc_security_group_ingress_rule" "sg_http_ingress" {
   security_group_id = aws_security_group.sg_alb.id
 
   tags = {
-    Name = "${var.sg_eks_name}-http-ingress"
+    Name = "${var.sg_alb_name}-http-ingress"
     managed_by = "Terraform"
   }
 }
@@ -38,12 +38,13 @@ resource "aws_vpc_security_group_ingress_rule" "sg_https_ingress" {
     managed_by = "Terraform"
   }
 }
+
 resource "aws_vpc_security_group_egress_rule" "sg_alb_egress" {
   description       = "allow all outbound traffic"
   from_port         = var.alb_egress_from_port
   to_port           = var.alb_egress_to_port
   ip_protocol       = var.alb_egress_protocol
-  cidr_ipv4         = var.alb_egress_cidr_block
+  referenced_security_group_id = aws_security_group.sg_eks.id
   security_group_id = aws_security_group.sg_alb.id
 
   tags = {
@@ -84,7 +85,7 @@ resource "aws_vpc_security_group_egress_rule" "sg_eks_egress" {
   from_port         = var.eks_egress_from_port
   to_port           = var.eks_egress_to_port
   ip_protocol       = var.eks_egress_protocol
-  cidr_ipv4         = var.eks_egress_cidr_block
+  referenced_security_group_id = aws_security_group.sg_rds.id
   security_group_id = aws_security_group.sg_eks.id
 
   tags = {

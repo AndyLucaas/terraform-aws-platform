@@ -24,17 +24,16 @@ ROUTE_TO_NGW_NAME = "route_to_ngw"
 IAM_ROLE_NAME = "iam_role"
 IAM_POLICY_NAME = "iam_policy"
 
+#sg for eks ==========================================
 SG_EKS_NAME = "sg_eks"
 
 EKS_INGRESS_FROM_PORT   = 8080
 EKS_INGRESS_TO_PORT     = 8080
 EKS_INGRESS_PROTOCOL    = "tcp"
-EKS_INGRESS_CIDR_BLOCK  = "10.0.1.0/24"
 
 EKS_EGRESS_FROM_PORT    = 5432
 EKS_EGRESS_TO_PORT      = 5432
 EKS_EGRESS_PROTOCOL     = "tcp"
-EKS_EGRESS_CIDR_BLOCK   = ["10.0.5.0/24", "10.0.6.0/24"]
 
 # sg for alb ============================================
 SG_ALB_NAME             = "sg_alb"
@@ -50,12 +49,14 @@ HTTPS_INGRESS_CIDR_BLOCK = "0.0.0.0/0"
 ALB_EGRESS_FROM_PORT = 8080
 ALB_EGRESS_TO_PORT = 8080
 ALB_EGRESS_PROTOCOL = "tcp"
-ALB_EGRESS_CIDR_BLOCK = ["0.0.0.0/0"]
 
+#sg for rds ==========================================
 SG_RDS_NAME = "sg_rds"
 RDS_INGRESS_FROM_PORT = 5432
 RDS_INGRESS_TO_PORT = 5432
 RDS_INGRESS_PROTOCOL = "tcp"
+
+
 EKS_CLUSTER_NAME = 
 EKS_NODE_GROUP_NAME = 
 EKS_INSTANCE_TYPE = 
