@@ -1,65 +1,64 @@
-aws_region = "eu-north-1"
-VPC_CIDR = "10.0.0.0/16"
-VPC_NAME = "srv_vpc"
-IGW_NAME = "srv_igw"
-ALB_SUBNET_CIDR = "10.0.1.0/24"
-AZ1 = data.aws_availability_zones.available.names[0]
-ALB_SUBNET_NAME = "alb_subnet"
-NGW_SUBNET_CIDR = "10.0.2.0/24"
-AZ2 = data.aws_availability_zones.available.names[1]
-NGW_SUBNET_NAME = "ngw_subnet"
-EKS_SUBNET1_CIDR = "10.0.3.0/24"
-EKS_SUBNET1_NAME = "eks_subnet1"
-EKS_SUBNET2_CIDR = "10.0.4.0/24"
-EKS_SUBNET2_NAME = "eks_subnet2"
+aws_region           = "eu-north-1"
+VPC_CIDR             = "10.0.0.0/16"
+VPC_NAME             = "srv_vpc"
+IGW_NAME             = "srv_igw"
+ALB_SUBNET_CIDR      = "10.0.1.0/24"
+AZ1                  = data.aws_availability_zones.available.names[0]
+ALB_SUBNET_NAME      = "alb_subnet"
+NGW_SUBNET_CIDR      = "10.0.2.0/24"
+AZ2                  = data.aws_availability_zones.available.names[1]
+NGW_SUBNET_NAME      = "ngw_subnet"
+EKS_SUBNET1_CIDR     = "10.0.3.0/24"
+EKS_SUBNET1_NAME     = "eks_subnet1"
+EKS_SUBNET2_CIDR     = "10.0.4.0/24"
+EKS_SUBNET2_NAME     = "eks_subnet2"
 PRIVATE_SUBNET3_CIDR = "10.0.5.0/24"
 PRIVATE_SUBNET3_NAME = "private_subnet3"
 PRIVATE_SUBNET4_CIDR = "10.0.6.0/24"
 PRIVATE_SUBNET4_NAME = "private_subnet4"
-NAT_EIP_NAME = "nat_eip"
-NAT_GW_NAME = "nat_gw"
-ROUTE_CIDR = "0.0.0.0/0"
-ROUTE_TO_IGW_NAME = "route_to_igw"
-ROUTE_TO_NGW_NAME = "route_to_ngw"
-IAM_ROLE_NAME = "iam_role"
-IAM_POLICY_NAME = "iam_policy"
+NAT_EIP_NAME         = "nat_eip"
+NAT_GW_NAME          = "nat_gw"
+ROUTE_CIDR           = "0.0.0.0/0"
+ROUTE_TO_IGW_NAME    = "route_to_igw"
+ROUTE_TO_NGW_NAME    = "route_to_ngw"
+IAM_ROLE_NAME        = "iam_role"
+IAM_POLICY_NAME      = "iam_policy"
 
 #sg for eks ==========================================
 SG_EKS_NAME = "sg_eks"
 
-EKS_INGRESS_FROM_PORT   = 8080
-EKS_INGRESS_TO_PORT     = 8080
-EKS_INGRESS_PROTOCOL    = "tcp"
+EKS_INGRESS_FROM_PORT = 8080
+EKS_INGRESS_TO_PORT   = 8080
+EKS_INGRESS_PROTOCOL  = "tcp"
 
-EKS_EGRESS_FROM_PORT    = 5432
-EKS_EGRESS_TO_PORT      = 5432
-EKS_EGRESS_PROTOCOL     = "tcp"
+EKS_EGRESS_FROM_PORT = 5432
+EKS_EGRESS_TO_PORT   = 5432
+EKS_EGRESS_PROTOCOL  = "tcp"
 
 # sg for alb ============================================
-SG_ALB_NAME             = "sg_alb"
-HTTP_INGRESS_FROM_PORT = 80
-HTTP_INGRESS_TO_PORT = 80
-HTTP_INGRESS_PROTOCOL = "tcp"
-HTTP_INGRESS_CIDR_BLOCK = "0.0.0.0/0"
-HTTPS_INGRESS_FROM_PORT = 443
-HTTPS_INGRESS_TO_PORT = 443
-HTTPS_INGRESS_PROTOCOL = "tcp"
+SG_ALB_NAME              = "sg_alb"
+HTTP_INGRESS_FROM_PORT   = 80
+HTTP_INGRESS_TO_PORT     = 80
+HTTP_INGRESS_PROTOCOL    = "tcp"
+HTTP_INGRESS_CIDR_BLOCK  = "0.0.0.0/0"
+HTTPS_INGRESS_FROM_PORT  = 443
+HTTPS_INGRESS_TO_PORT    = 443
+HTTPS_INGRESS_PROTOCOL   = "tcp"
 HTTPS_INGRESS_CIDR_BLOCK = "0.0.0.0/0"
 
 ALB_EGRESS_FROM_PORT = 8080
-ALB_EGRESS_TO_PORT = 8080
-ALB_EGRESS_PROTOCOL = "tcp"
+ALB_EGRESS_TO_PORT   = 8080
+ALB_EGRESS_PROTOCOL  = "tcp"
 
 #sg for rds ==========================================
-SG_RDS_NAME = "sg_rds"
+SG_RDS_NAME           = "sg_rds"
 RDS_INGRESS_FROM_PORT = 5432
-RDS_INGRESS_TO_PORT = 5432
-RDS_INGRESS_PROTOCOL = "tcp"
+RDS_INGRESS_TO_PORT   = 5432
+RDS_INGRESS_PROTOCOL  = "tcp"
 
-
-EKS_CLUSTER_NAME = 
-EKS_NODE_GROUP_NAME = 
-EKS_INSTANCE_TYPE = 
-DB_NAME = 
-DB_PORT = 
-DB_PASSWORD_SECRET_NAME = 
+EKS_CLUSTER_NAME        = "srv-k8s-cluster"
+EKS_NODE_GROUP_NAME     = "srv-k8s-node-group"
+EKS_INSTANCE_TYPE       = "t3.medium"
+DB_NAME                 = "itdesk"
+DB_PORT                 = 5432
+DB_PASSWORD_SECRET_NAME = "prod/secret/database"
