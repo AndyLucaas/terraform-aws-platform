@@ -1,10 +1,3 @@
-local {
-  common_tags = {
-    Project     = "itdesk"
-    Environment = "production"
-    ManagedBy   = "Terraform"
-  }
-}
 module "vpc" {
   source         = "./modules/aws_vpc"
   vpc_cidr_block = var.VPC_CIDR

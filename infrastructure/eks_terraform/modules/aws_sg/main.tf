@@ -4,8 +4,7 @@ resource "aws_security_group" "sg_alb" {
   description = "security group for alb"
   vpc_id      = aws_vpc.vpc.id
 
-  tags =
-    {
+  tags = {
       Name = var.sg_alb_name
       managed_by = "Terraform"
     }
@@ -59,8 +58,7 @@ resource "aws_security_group" "sg_eks" {
   description = "security group for eks"
   vpc_id      = aws_vpc.vpc.id
 
-  tags =
-    {
+  tags = {
       Name = var.sg_eks_name
       managed_by = "Terraform"
     }
@@ -100,8 +98,7 @@ resource "aws_security_group" "sg_rds" {
   description = "security group for rds"
   vpc_id      = aws_vpc.vpc.id
 
-  tags = 
-    {
+  tags = {
       Name = var.sg_rds_name
       managed_by = "Terraform"
     }
