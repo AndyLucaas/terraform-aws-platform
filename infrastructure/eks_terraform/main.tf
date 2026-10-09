@@ -57,11 +57,22 @@ module "sg" {
 
   #sg for eks ==========================================
   sg_eks_name             = var.SG_EKS_NAME
+  eks_ingress_from_port  = var.EKS_INGRESS_FROM_PORT
+  eks_ingress_to_port    = var.EKS_INGRESS_TO_PORT
+  eks_ingress_protocol   = var.EKS_INGRESS_PROTOCOL
+  eks_ingress_cidr_block = var.EKS_INGRESS_CIDR_BLOCK
+
+  eks_egress_from_port  = var.EKS_EGRESS_FROM_PORT
+  eks_egress_to_port    = var.EKS_EGRESS_TO_PORT
+  eks_egress_protocol   = var.EKS_EGRESS_PROTOCOL
+  eks_egress_cidr_block = var.EKS_EGRESS_CIDR_BLOCK
+
+  #sg for alb ===========================================
+  sg_alb_name             = var.SG_ALB_NAME
   http_ingress_from_port  = var.HTTP_INGRESS_FROM_PORT
   http_ingress_to_port    = var.HTTP_INGRESS_TO_PORT
   http_ingress_protocol   = var.HTTP_INGRESS_PROTOCOL
   http_ingress_cidr_block = var.HTTP_INGRESS_CIDR_BLOCK
-
   https_ingress_from_port  = var.HTTPS_INGRESS_FROM_PORT
   https_ingress_to_port    = var.HTTPS_INGRESS_TO_PORT
   https_ingress_protocol   = var.HTTPS_INGRESS_PROTOCOL
