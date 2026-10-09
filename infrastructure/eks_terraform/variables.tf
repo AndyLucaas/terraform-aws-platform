@@ -99,6 +99,42 @@ variable "IAM_POLICY_NAME" {
   type = string
 }
 
+variable "SG_ALB_NAME" {
+  type = string
+}
+
+variable "ALB_INGRESS_FROM_PORT" {
+  type = number
+}
+
+variable "ALB_INGRESS_TO_PORT" {
+  type = number
+}
+
+variable "ALB_INGRESS_PROTOCOL" {
+  type = string
+}
+
+variable "ALB_INGRESS_CIDR_BLOCK" {
+  type = string
+}
+
+variable "ALB_EGRESS_FROM_PORT" {
+  type = number
+}
+
+variable "ALB_EGRESS_TO_PORT" {
+  type = number
+}
+
+variable "ALB_EGRESS_PROTOCOL" {
+  type = string
+}
+
+variable "ALB_EGRESS_CIDR_BLOCK" {
+  type = string
+}
+
 variable "SG_EKS_NAME" {
   type = string
 }
