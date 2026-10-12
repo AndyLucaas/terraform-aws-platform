@@ -8,12 +8,12 @@ module "vpc" {
 
   #subnet for alb ==========================
   alb_subnet_cidr = var.ALB_SUBNET_CIDR
-  az1             = var.AZ1
+  az1             = data.aws_availability_zones.available.names[0]
   alb_subnet_name = var.ALB_SUBNET_NAME
 
   #subnet for ngw ==========================
   ngw_subnet_cidr = var.NGW_SUBNET_CIDR
-  az2             = var.AZ2
+  az2             = data.aws_availability_zones.available.names[1]
   ngw_subnet_name = var.NGW_SUBNET_NAME
 
   # subnets for eks ======================================
@@ -43,11 +43,11 @@ module "iam" {
 
   role_name   = var.IAM_ROLE_NAME
   policy_name = var.IAM_POLICY_NAME
-
+  depends_on = [module.vpc]
 }
 module "sg" {
   source = "./modules/aws_sg"
-
+  vpc_id = module.vpc.vpc_id
   #sg for alb ===========================================
   sg_alb_name              = var.SG_ALB_NAME
   http_ingress_from_port   = var.HTTP_INGRESS_FROM_PORT
@@ -78,7 +78,8 @@ module "sg" {
   rds_ingress_from_port = var.RDS_INGRESS_FROM_PORT
   rds_ingress_to_port   = var.RDS_INGRESS_TO_PORT
   rds_ingress_protocol  = var.RDS_INGRESS_PROTOCOL
-
+  
+  depends_on = [module.iam, module.vpc]
 }
 
 module "eks" {
@@ -88,6 +89,12 @@ module "eks" {
   node_group_name = var.EKS_NODE_GROUP_NAME
   instance_type   = var.EKS_INSTANCE_TYPE
 
+  eks_role_arn     = module.iam.role_arn
+  eks_subnet1_id   = module.vpc.eks_subnet1_id
+  eks_subnet2_id   = module.vpc.eks_subnet2_id
+  sg_eks_id        = module.sg.sg_eks_id
+
+  depends_on = [module.sg, module.iam, module.vpc]
 }
 module "rds" {
   source = "./modules/aws_rds"
@@ -96,4 +103,7 @@ module "rds" {
   db_port                 = var.DB_PORT
   # subnet_ids              = module.vpc.private_subnet_ids
   db_password_secret_name = var.DB_PASSWORD_SECRET_NAME
+  sg_rds_id                = module.sg.sg_rds_id
+
+  depends_on = [module.sg, module.vpc, module.iam, module.eks]
 }

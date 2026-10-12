@@ -3,10 +3,10 @@ VPC_CIDR             = "10.0.0.0/16"
 VPC_NAME             = "srv_vpc"
 IGW_NAME             = "srv_igw"
 ALB_SUBNET_CIDR      = "10.0.1.0/24"
-AZ1                  = data.aws_availability_zones.available.names[0]
+# AZ1                  = data.aws_availability_zones.available.names[0]
 ALB_SUBNET_NAME      = "alb_subnet"
 NGW_SUBNET_CIDR      = "10.0.2.0/24"
-AZ2                  = data.aws_availability_zones.available.names[1]
+# AZ2                  = data.aws_availability_zones.available.names[1]
 NGW_SUBNET_NAME      = "ngw_subnet"
 EKS_SUBNET1_CIDR     = "10.0.3.0/24"
 EKS_SUBNET1_NAME     = "eks_subnet1"
@@ -56,9 +56,12 @@ RDS_INGRESS_FROM_PORT = 5432
 RDS_INGRESS_TO_PORT   = 5432
 RDS_INGRESS_PROTOCOL  = "tcp"
 
+#eks cluster ==========================================
 EKS_CLUSTER_NAME        = "srv-k8s-cluster"
 EKS_NODE_GROUP_NAME     = "srv-k8s-node-group"
 EKS_INSTANCE_TYPE       = "t3.medium"
+
+#rds instance ==========================================
 DB_NAME                 = "itdesk"
 DB_PORT                 = 5432
 DB_PASSWORD_SECRET_NAME = "prod/secret/database"

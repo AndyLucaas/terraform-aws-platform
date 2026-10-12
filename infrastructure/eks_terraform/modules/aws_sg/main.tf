@@ -2,7 +2,7 @@
 resource "aws_security_group" "sg_alb" {
   name        = var.sg_alb_name
   description = "security group for alb"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = var.vpc_id
 
   tags = {
       Name = var.sg_alb_name
@@ -56,7 +56,7 @@ resource "aws_vpc_security_group_egress_rule" "sg_alb_egress" {
 resource "aws_security_group" "sg_eks" {
   name        = var.sg_eks_name
   description = "security group for eks"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = var.vpc_id
 
   tags = {
       Name = var.sg_eks_name
@@ -96,7 +96,7 @@ resource "aws_vpc_security_group_egress_rule" "sg_eks_egress" {
 resource "aws_security_group" "sg_rds" {
   name        = var.sg_rds_name
   description = "security group for rds"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = var.vpc_id
 
   tags = {
       Name = var.sg_rds_name

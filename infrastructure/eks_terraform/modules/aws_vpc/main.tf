@@ -1,12 +1,12 @@
 resource "aws_vpc" "web_srv_vpc" {
-    cidr_block = var.vpc_cidr_block
-    enable_dns_support   = true
-    enable_dns_hostnames = true
+  cidr_block           = var.vpc_cidr_block
+  enable_dns_support   = true
+  enable_dns_hostnames = true
 
-    tags = {
-        Name = var.vpc_name
-        managed_by = "Terraform"
-    }
+  tags = {
+    Name       = var.vpc_name
+    managed_by = "Terraform"
+  }
 }
 
 #internet gateway ======================================
@@ -92,6 +92,14 @@ resource "aws_subnet" "private_subnet4" {
 
 }
 
+resource "aws_db_subnet_group" "default" {
+  name       = "db-subnet-group"
+  subnet_ids = [aws_subnet.private_subnet3.id, aws_subnet.private_subnet4.id]
+
+  tags = {
+    Name = "My DB subnet group"
+  }
+}
 #nat gateway ======================================
 resource "aws_eip" "nat_eip" {
   domain = "vpc"
@@ -148,12 +156,12 @@ resource "aws_route_table_association" "ngw_to_igw" {
 
 # route for private subnets to access internet via ngw =========================================
 resource "aws_route_table_association" "route_assocition3" {
-  subnet_id      = aws_subnet.private_subnet1.id
+  subnet_id      = aws_subnet.eks_subnet1.id
   route_table_id = aws_route_table.private.id
 }   
 
 resource "aws_route_table_association" "route_association4" {
-  subnet_id      = aws_subnet.private_subnet2.id
+  subnet_id      = aws_subnet.eks_subnet2.id
   route_table_id = aws_route_table.private.id
 }
 

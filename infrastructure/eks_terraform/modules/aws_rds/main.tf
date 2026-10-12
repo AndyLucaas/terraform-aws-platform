@@ -19,11 +19,11 @@ resource "aws_db_instance" "postgres" {
   engine_version       = "13.4"
   instance_class       = "db.t3.micro"
 
-  vpc_security_group_ids = [aws_security_group.sg_rds.id]
-  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.name
+  vpc_security_group_ids = [var.sg_rds_id]
+  db_subnet_group_name   = "db-subnet-group"
 
-  username             = locals.rds_secret.DB_USERNAME
-  password             = locals.rds_secret.DB_PASSWORD
+  username             = local.rds_secret.DB_USERNAME
+  password             = local.rds_secret.DB_PASSWORD
   port                 = var.db_port
 
   skip_final_snapshot  = true

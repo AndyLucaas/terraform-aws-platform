@@ -9,3 +9,7 @@ variable "db_port" {
 variable "db_password_secret_name" {
   type = string
 }
+
+variable "sg_rds_id" {
+  type        = string
+}

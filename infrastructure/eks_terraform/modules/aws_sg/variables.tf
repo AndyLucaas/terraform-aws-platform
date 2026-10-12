@@ -1,3 +1,7 @@
+variable "vpc_id" {
+  type        = string
+}
+
 # alb ==================================================
 variable "sg_alb_name" {
   type = string

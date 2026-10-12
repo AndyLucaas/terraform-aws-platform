@@ -19,9 +19,9 @@ variable "ALB_SUBNET_CIDR" {
   type = string
 }
 
-variable "AZ1" {
-  type = string
-}
+# variable "AZ1" {
+#   type = string
+# }
 
 variable "ALB_SUBNET_NAME" {
   type = string
@@ -31,9 +31,9 @@ variable "NGW_SUBNET_CIDR" {
   type = string
 }
 
-variable "AZ2" {
-  type = string
-}
+# variable "AZ2" {
+#   type = string
+# }
 
 variable "NGW_SUBNET_NAME" {
   type = string
@@ -115,10 +115,6 @@ variable "EKS_INGRESS_PROTOCOL" {
   type = string
 }
 
-variable "EKS_INGRESS_CIDR_BLOCK" {
-  type = string
-}
-
 variable "EKS_EGRESS_FROM_PORT" {
   type = number
 }
@@ -128,10 +124,6 @@ variable "EKS_EGRESS_TO_PORT" {
 }
 
 variable "EKS_EGRESS_PROTOCOL" {
-  type = string
-}
-
-variable "EKS_EGRESS_CIDR_BLOCK" {
   type = string
 }
 
@@ -171,6 +163,17 @@ variable "HTTPS_INGRESS_CIDR_BLOCK" {
   type = string
 }
 
+variable "ALB_EGRESS_FROM_PORT" {
+  type = number
+}
+
+variable "ALB_EGRESS_TO_PORT" {
+  type = number
+}
+variable "ALB_EGRESS_PROTOCOL" {
+  type = string
+}
+
 variable "SG_RDS_NAME" {
   type = string
 }
@@ -187,6 +190,18 @@ variable "RDS_INGRESS_PROTOCOL" {
   type = string
 }
 
+# EKS ===========================================================================
+# variable "EKS_ROLE_ARN" {
+#   type = string
+# }
+
+# variable "EKS_SUBNET1_ID" {
+#     type = string
+# }
+# variable "EKS_SUBNET2_ID" {
+#     type = string
+# }
+
 variable "EKS_CLUSTER_NAME" {
   type = string
 }
@@ -199,6 +214,10 @@ variable "EKS_INSTANCE_TYPE" {
   type = string
 }
 
+# variable "SG_EKS_ID" {
+#   type = string
+# }
+#rds ==============================================================
 variable "DB_NAME" {
   type = string
 }
