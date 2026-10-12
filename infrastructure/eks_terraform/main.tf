@@ -41,10 +41,12 @@ module "vpc" {
 module "iam" {
   source = "./modules/aws_iam"
 
-  role_name   = var.IAM_ROLE_NAME
-  policy_name = var.IAM_POLICY_NAME
-  depends_on = [module.vpc]
+  role_name      = var.IAM_ROLE_NAME
+  policy_name    = var.IAM_POLICY_NAME
+  node_role_name = var.IAM_NODE_ROLE_NAME
+  depends_on     = [module.vpc]
 }
+
 module "sg" {
   source = "./modules/aws_sg"
   vpc_id = module.vpc.vpc_id
@@ -78,7 +80,7 @@ module "sg" {
   rds_ingress_from_port = var.RDS_INGRESS_FROM_PORT
   rds_ingress_to_port   = var.RDS_INGRESS_TO_PORT
   rds_ingress_protocol  = var.RDS_INGRESS_PROTOCOL
-  
+
   depends_on = [module.iam, module.vpc]
 }
 
@@ -88,22 +90,22 @@ module "eks" {
   cluster_name    = var.EKS_CLUSTER_NAME
   node_group_name = var.EKS_NODE_GROUP_NAME
   instance_type   = var.EKS_INSTANCE_TYPE
-
-  eks_role_arn     = module.iam.role_arn
-  eks_subnet1_id   = module.vpc.eks_subnet1_id
-  eks_subnet2_id   = module.vpc.eks_subnet2_id
-  sg_eks_id        = module.sg.sg_eks_id
+  node_role_arn   = module.iam.node_role_arn
+  eks_role_arn    = module.iam.role_arn
+  eks_subnet1_id  = module.vpc.eks_subnet1_id
+  eks_subnet2_id  = module.vpc.eks_subnet2_id
+  sg_eks_id       = module.sg.sg_eks_id
 
   depends_on = [module.sg, module.iam, module.vpc]
 }
 module "rds" {
   source = "./modules/aws_rds"
 
-  db_name                 = var.DB_NAME
-  db_port                 = var.DB_PORT
+  db_name = var.DB_NAME
+  db_port = var.DB_PORT
   # subnet_ids              = module.vpc.private_subnet_ids
   db_password_secret_name = var.DB_PASSWORD_SECRET_NAME
-  sg_rds_id                = module.sg.sg_rds_id
+  sg_rds_id               = module.sg.sg_rds_id
 
   depends_on = [module.sg, module.vpc, module.iam, module.eks]
 }

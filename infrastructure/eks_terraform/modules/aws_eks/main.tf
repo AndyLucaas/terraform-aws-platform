@@ -16,7 +16,7 @@ resource "aws_eks_cluster" "eks_cluster" {
 resource "aws_eks_node_group" "node_group" {
   cluster_name    = var.cluster_name
   node_group_name = var.node_group_name
-  node_role_arn   = var.eks_role_arn
+  node_role_arn   = var.node_role_arn
   subnet_ids      = [var.eks_subnet1_id, var.eks_subnet2_id]
   instance_types  = [var.instance_type]
 

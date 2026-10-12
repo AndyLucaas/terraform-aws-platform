@@ -94,6 +94,9 @@ variable "ROUTE_TO_NGW_NAME" {
 variable "IAM_ROLE_NAME" {
   type = string
 }
+variable "IAM_NODE_ROLE_NAME" {
+  type = string
+}
 
 variable "IAM_POLICY_NAME" {
   type = string

@@ -6,6 +6,10 @@ variable "node_group_name" {
   type = string
 }
 
+variable "node_role_arn" {
+  type        = string
+}
+
 variable "instance_type" {
   type = string
 }
