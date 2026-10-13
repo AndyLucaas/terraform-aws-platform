@@ -19,6 +19,7 @@ resource "aws_iam_role" "role" {
     Name = var.role_name
   }
 }
+
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
   role       = aws_iam_role.role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
@@ -61,6 +62,7 @@ resource "aws_iam_role_policy_attachment" "attach_sm_policy" {
   role       = aws_iam_role.role_for_pods.name
   policy_arn = aws_iam_policy.sm_read_policy.arn
 }
+
 # node roles ===========================================================
 resource "aws_iam_role" "node_role" {
   name = var.node_role_name
@@ -96,3 +98,5 @@ resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOn
   role       = aws_iam_role.node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
+
+#load balancer ==========================================================================
