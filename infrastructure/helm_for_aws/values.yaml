@@ -1,0 +1,111 @@
+frontend:
+  replicaCount: 1
+  image:
+    repository: andylucas06/itdesk-frontend
+    pullPolicy: IfNotPresent
+    tag: 2
+
+  ports:
+    - name: http-port
+      containerPort: 8080
+      protocol: TCP
+
+  service:
+    - port: 8080
+      targetPort: http-port
+      protocol: TCP
+
+backend:
+  replicaCount: 1
+
+  image:
+    repository: andylucas06/itdesk-backend
+    pullPolicy: IfNotPresent
+    tag: 1
+  
+  ports:
+    - name:  http-port
+      containerPort: 8080
+      protocol: TCP
+  service:
+    - port: 8080
+      targetPort: http-port
+      protocol: TCP
+
+  config:
+    SERVER_PORT: "8080"
+    CORS_ALLOWED_ORIGINS: "http://app.itticket.local"
+    ATTACHMENTS_PATH: "/var/itdesk/attachments"
+    DB_URL: "jdbc:postgresql://itticket-postgresql-svc:5432/itdesk"
+    DB_NAME: "itdesk"
+  volumes:
+    - name: attachments
+      emptyDir: {}
+  volumeMounts:
+    - name: attachments
+      mountPath: /var/itdesk/attachments
+
+postgresql:
+  image: 
+    repository: postgres
+    tag: 16-alpine
+    pullPolicy: IfNotPresent
+  service:
+    - port: 5432
+      targetPort: http
+      protocol: TCP
+  ports:
+    - name: http
+      containerPort: 5432
+      protocol: TCP
+  volumeMounts:
+    - name: data
+      mountPath: /var/lib/postgresql/data
+  volumes:
+    - name: data
+      emptyDir: {}
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  hosts:
+    - host: app.itticket.local
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: itticket-frontend-svc
+              port:
+                number: 8080
+    - host: api.itticket.local
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: itticket-backend-svc
+              port:
+                number: 8080
+  # tls: 
+  #   - secretName: chart-example-tls
+  #     hosts:  
+  #       - app.itticket.local
+autoscaling:
+  enabled: false
+httpRoute:
+  enabled: false 
+
+resources:
+  enabled: false
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+volumes: []
+
+volumeMounts: []
