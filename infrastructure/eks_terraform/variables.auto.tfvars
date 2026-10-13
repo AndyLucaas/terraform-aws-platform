@@ -59,7 +59,7 @@ RDS_INGRESS_PROTOCOL  = "tcp"
 #eks cluster ==========================================
 EKS_CLUSTER_NAME    = "srv-k8s-cluster"
 EKS_NODE_GROUP_NAME = "srv-k8s-node-group"
-EKS_INSTANCE_TYPE   = "t3.medium"
+EKS_INSTANCE_TYPE   = "c7i-flex.large"
 
 #rds instance ==========================================
 DB_NAME                 = "itdesk"
