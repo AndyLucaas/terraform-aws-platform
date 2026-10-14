@@ -10,6 +10,7 @@ module "vpc" {
   alb_subnet_cidr = var.ALB_SUBNET_CIDR
   az1             = data.aws_availability_zones.available.names[0]
   alb_subnet_name = var.ALB_SUBNET_NAME
+  cluster_name    = var.EKS_CLUSTER_NAME
 
   #subnet for ngw ==========================
   ngw_subnet_cidr = var.NGW_SUBNET_CIDR
@@ -120,12 +121,10 @@ module "iam_alb" {
 }
 
 module "alb" {
-  source    = "./modules/aws_alb"
-  cluster_name  = var.EKS_CLUSTER_NAME
-  namespace = var.NAMESPACE
-  role_arn  = module.iam_alb.role_arn
-
+  source       = "./modules/aws_alb"
+  cluster_name = var.EKS_CLUSTER_NAME
+  namespace    = var.NAMESPACE
+  role_arn     = module.iam_alb.role_arn
+  vpc_id = module.vpc.vpc_id
   depends_on = [module.sg, module.vpc, module.iam, module.eks, module.iam_alb]
 }
-
-

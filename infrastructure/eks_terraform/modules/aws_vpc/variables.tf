@@ -85,3 +85,7 @@ variable "route_to_igw_name" {
 variable "route_to_ngw_name" {
   type = string
 }
+
+variable "cluster_name" {
+  type = string
+}

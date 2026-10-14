@@ -45,30 +45,14 @@ backend:
     - name: attachments
       mountPath: /var/itdesk/attachments
 
-postgresql:
-  image: 
-    repository: postgres
-    tag: 16-alpine
-    pullPolicy: IfNotPresent
-  service:
-    - port: 5432
-      targetPort: http
-      protocol: TCP
-  ports:
-    - name: http
-      containerPort: 5432
-      protocol: TCP
-  volumeMounts:
-    - name: data
-      mountPath: /var/lib/postgresql/data
-  volumes:
-    - name: data
-      emptyDir: {}
 
 ingress:
   enabled: true
-  className: nginx
-  annotations: {}
+  className: alb
+  annotations: 
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
   hosts:
     - host: app.itticket.local
       paths:

@@ -5,7 +5,7 @@ resource "helm_release" "aws_load_balancer_controller" {
   chart      = "aws-load-balancer-controller"
   version    = "3.6.0"
   wait       = true
-  atomic     = true
+  atomic     = false
 
   set = [
     {
@@ -15,6 +15,10 @@ resource "helm_release" "aws_load_balancer_controller" {
     {
       name  = "region"
       value = "eu-north-1"
+    },
+    {
+    name  = "vpcId"
+    value = var.vpc_id
     },
     # Le chart crée le ServiceAccount...
     {
