@@ -112,15 +112,20 @@ module "rds" {
 
 module "iam_alb" {
   source        = "./modules/aws_iam_alb"
-  role_alb_name = ROLE_ALB_NAME
-  alb_policy    = ALB_POLICY
+  cluster_name  = var.EKS_CLUSTER_NAME
+  role_alb_name = var.ROLE_ALB_NAME
+  alb_policy    = var.ALB_POLICY
 
   depends_on = [module.sg, module.vpc, module.iam, module.eks]
 }
 
 module "alb" {
   source    = "./modules/aws_alb"
-  namespace = NAMESPACE
+  cluster_name  = var.EKS_CLUSTER_NAME
+  namespace = var.NAMESPACE
+  role_arn  = module.iam_alb.role_arn
+
+  depends_on = [module.sg, module.vpc, module.iam, module.eks, module.iam_alb]
 }
 
 

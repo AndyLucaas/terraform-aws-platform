@@ -29,7 +29,7 @@ resource "helm_release" "aws_load_balancer_controller" {
   # ... et y injecter l'ARN du rôle IAM que vous avez créé
   set {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = aws_iam_role.role_alb.arn
+    value = var.role_arn
   }
 
   # Recommandé avec le VPC CNI pour enregistrer les IPs des pods comme cibles
@@ -37,10 +37,4 @@ resource "helm_release" "aws_load_balancer_controller" {
     name  = "defaultTargetType"
     value = "ip"
   }
-
-  # Dépendance explicite : le rôle IAM doit exister avant le chart
-  depends_on = [
-    aws_iam_role.role_alb,
-    aws_iam_role_policy_attachment.alb_attachment,
-  ]
 }
