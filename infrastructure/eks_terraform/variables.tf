@@ -232,3 +232,17 @@ variable "DB_PORT" {
 variable "DB_PASSWORD_SECRET_NAME" {
   type = string
 }
+
+#ALB ==========================================================================
+
+variable "NAMESPACE" {
+  type = string
+}
+
+variable "ROLE_ALB_NAME" {
+  type = string
+}
+
+variable "ALB_POLICY" {
+  type = string
+}

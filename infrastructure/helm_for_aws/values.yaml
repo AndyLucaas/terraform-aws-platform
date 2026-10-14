@@ -31,12 +31,6 @@ backend:
     - port: 8080
       targetPort: http-port
       protocol: TCP
-  
-  serviceAccount:
-    create: true
-    name: backend-sa
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/backend-role
 
   config:
     SERVER_PORT: "8080"

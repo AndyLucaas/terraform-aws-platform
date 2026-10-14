@@ -109,3 +109,18 @@ module "rds" {
 
   depends_on = [module.sg, module.vpc, module.iam, module.eks]
 }
+
+module "iam_alb" {
+  source        = "./modules/aws_iam_alb"
+  role_alb_name = ROLE_ALB_NAME
+  alb_policy    = ALB_POLICY
+
+  depends_on = [module.sg, module.vpc, module.iam, module.eks]
+}
+
+module "alb" {
+  source    = "./modules/aws_alb"
+  namespace = NAMESPACE
+}
+
+
