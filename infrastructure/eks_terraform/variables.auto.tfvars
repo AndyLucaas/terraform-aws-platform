@@ -68,5 +68,5 @@ DB_PASSWORD_SECRET_NAME = "prod/secret/database"
 
 #ALB ===============================================================
 NAMESPACE     = "kube-system"
-ROLE_ALB_NAME = "iam role for alb controller"
-ALB_POLICY    = "iam policy for alb"
+ROLE_ALB_NAME = "iam_role_alb"
+ALB_POLICY    = "iam_policy_alb"
