@@ -29,7 +29,7 @@ resource "aws_eks_node_group" "node_group" {
   update_config {
     max_unavailable = 1
   }
-
+  depends_on = [aws_eks_cluster.eks_cluster]
   tags = {
     Name = var.node_group_name
   }
