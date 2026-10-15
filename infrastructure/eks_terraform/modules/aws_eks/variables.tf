@@ -7,7 +7,7 @@ variable "node_group_name" {
 }
 
 variable "node_role_arn" {
-  type        = string
+  type = string
 }
 
 variable "instance_type" {
@@ -15,21 +15,17 @@ variable "instance_type" {
 }
 
 variable "eks_role_arn" {
-  description = "ARN du rôle IAM pour le cluster EKS"
-  type        = string
+  type = string
 }
 
 variable "eks_subnet1_id" {
-  description = "ID du premier subnet pour EKS"
-  type        = string
+  type = string
 }
 
 variable "eks_subnet2_id" {
-  description = "ID du deuxième subnet pour EKS"
-  type        = string
+  type = string
 }
 
 variable "sg_eks_id" {
-  description = "ID du security group pour EKS"
-  type        = string
+  type = string
 }

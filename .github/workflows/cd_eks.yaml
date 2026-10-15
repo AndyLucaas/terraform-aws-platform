@@ -27,5 +27,5 @@ jobs:
         working-directory: infrastructure/eks_terraform
 
       - name: apply changes
-        run: terraform apply --auto-aprove
+        run: terraform apply --auto-approve
         working-directory: infrastructure/eks_terraform
