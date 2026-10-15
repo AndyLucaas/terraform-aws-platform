@@ -1,7 +1,7 @@
 name: deploy infra
 on:
   push:
-    branches: ["main"]
+    branches: ["feature"]
     paths:
       - "infrastructure/eks_terraform/**"
 
@@ -21,7 +21,7 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v4
         with:
-          terraform_version: "1.14.6"
+          terraform_version: "1.16.0"
       - name: init terraform
         run: terraform init
         working-directory: infrastructure/eks_terraform
