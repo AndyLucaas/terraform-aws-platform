@@ -70,3 +70,8 @@ DB_PASSWORD_SECRET_NAME = "prod/secret/database"
 NAMESPACE     = "kube-system"
 ROLE_ALB_NAME = "iam_role_alb"
 ALB_POLICY    = "iam_policy_alb"
+
+#IAM =========================================================
+ROLE_NAME    = "role_for_svc_account"
+SRV_ACC_NAME = "secret_manager_credentials"
+ROLE_NAME2 = "node_role"

@@ -94,6 +94,10 @@ variable "ROUTE_TO_NGW_NAME" {
 variable "IAM_ROLE_NAME" {
   type = string
 }
+
+variable "ROLE_NAME2" {
+  type = string
+}
 variable "IAM_NODE_ROLE_NAME" {
   type = string
 }
@@ -246,3 +250,12 @@ variable "ROLE_ALB_NAME" {
 variable "ALB_POLICY" {
   type = string
 }
+
+variable "ROLE_NAME" {
+  type = string
+}
+
+variable "SRV_ACC_NAME" {
+  type = string
+}
+

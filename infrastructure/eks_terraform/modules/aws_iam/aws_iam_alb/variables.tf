@@ -9,3 +9,11 @@ variable "alb_policy" {
 variable "cluster_name" {
   type        = string
 }
+
+variable "oidc_id" {
+  type        = string
+}
+
+variable "oidc_arn" {
+  type        = string
+}

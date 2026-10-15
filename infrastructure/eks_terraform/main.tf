@@ -39,15 +39,38 @@ module "vpc" {
   route_to_ngw_name = var.ROUTE_TO_NGW_NAME
 
 }
-module "iam" {
-  source = "./modules/aws_iam"
 
-  role_name      = var.IAM_ROLE_NAME
-  policy_name    = var.IAM_POLICY_NAME
-  node_role_name = var.IAM_NODE_ROLE_NAME
-  depends_on     = [module.vpc]
+#IAM ROLES =================================================================================
+module "oidc" {
+  source = "./modules/aws_iam/aws_oidc"
+
+  cluster_name = var.EKS_CLUSTER_NAME
+  depends_on = [ module.eks ]
+}
+module "iam_eks" {
+  source = "./modules/aws_iam/aws_iam_eks"
+
+  role_name  = var.IAM_ROLE_NAME
+  depends_on = [module.vpc]
+}
+module "iam_pods" {
+  source = "./modules/aws_iam/aws_iam_pods"
+
+  role_name            = var.ROLE_NAME
+  oidc_id              = module.oidc.oidc_id
+  oidc_arn             = module.oidc.oidc_arn
+  namespace            = var.NAMESPACE
+  service_account_name = var.SRV_ACC_NAME
+  policy_name          = var.IAM_ROLE_NAME
+  depends_on           = [module.eks]
 }
 
+module "iam_node" {
+  source = "./modules/aws_iam/aws_iam_node"
+
+  node_role_name = var.ROLE_NAME2
+  depends_on     = [module.vpc]
+}
 module "sg" {
   source = "./modules/aws_sg"
   vpc_id = module.vpc.vpc_id
@@ -82,7 +105,7 @@ module "sg" {
   rds_ingress_to_port   = var.RDS_INGRESS_TO_PORT
   rds_ingress_protocol  = var.RDS_INGRESS_PROTOCOL
 
-  depends_on = [module.iam, module.vpc]
+  depends_on = [module.vpc]
 }
 
 module "eks" {
@@ -91,13 +114,13 @@ module "eks" {
   cluster_name    = var.EKS_CLUSTER_NAME
   node_group_name = var.EKS_NODE_GROUP_NAME
   instance_type   = var.EKS_INSTANCE_TYPE
-  node_role_arn   = module.iam.node_role_arn
-  eks_role_arn    = module.iam.role_arn
+  node_role_arn   = module.iam_node.node_role_arn
+  eks_role_arn    = module.iam_eks.role_arn
   eks_subnet1_id  = module.vpc.eks_subnet1_id
   eks_subnet2_id  = module.vpc.eks_subnet2_id
   sg_eks_id       = module.sg.sg_eks_id
 
-  depends_on = [module.sg, module.iam, module.vpc]
+  depends_on = [module.sg, module.iam_eks, module.iam_node, module.vpc]
 }
 module "rds" {
   source = "./modules/aws_rds"
@@ -108,16 +131,17 @@ module "rds" {
   db_password_secret_name = var.DB_PASSWORD_SECRET_NAME
   sg_rds_id               = module.sg.sg_rds_id
 
-  depends_on = [module.sg, module.vpc, module.iam, module.eks]
+  depends_on = [module.sg, module.vpc, module.eks]
 }
 
 module "iam_alb" {
-  source        = "./modules/aws_iam_alb"
+  source        = "./modules/aws_iam/aws_iam_alb"
   cluster_name  = var.EKS_CLUSTER_NAME
   role_alb_name = var.ROLE_ALB_NAME
   alb_policy    = var.ALB_POLICY
-
-  depends_on = [module.sg, module.vpc, module.iam, module.eks]
+  oidc_id       = module.oidc.oidc_id
+  oidc_arn      = module.oidc.oidc_arn
+  depends_on    = [module.sg, module.vpc, module.eks]
 }
 
 module "alb" {
@@ -125,6 +149,6 @@ module "alb" {
   cluster_name = var.EKS_CLUSTER_NAME
   namespace    = var.NAMESPACE
   role_arn     = module.iam_alb.role_arn
-  vpc_id = module.vpc.vpc_id
-  depends_on = [module.sg, module.vpc, module.iam, module.eks, module.iam_alb]
+  vpc_id       = module.vpc.vpc_id
+  depends_on   = [module.eks, module.iam_alb]
 }

@@ -1,14 +1,4 @@
-locals {
-  oidc_issuer = data.aws_eks_cluster.this.identity[0].oidc[0].issuer
-  oidc_id = replace(local.oidc_issuer, "https://", "")
-}
-
-resource "aws_iam_openid_connect_provider" "eks" {
-  url             = local.oidc_issuer
-  client_id_list  = ["sts.amazonaws.com"]
-}
-
-#eks alb role ================================================
+#alb role ================================================
 resource "aws_iam_role" "role_alb" {
   name = var.role_alb_name
 
@@ -18,13 +8,13 @@ resource "aws_iam_role" "role_alb" {
       {
         Effect = "Allow"
         Principal = {
-          Federated = aws_iam_openid_connect_provider.eks.arn
+          Federated = var.oidc_arn
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
           StringEquals = {
-            "${local.oidc_id}:sub" = "system:serviceaccount:kube-system:aws-load-balancer-controller"
-            "${local.oidc_id}:aud" = "sts.amazonaws.com"
+            "${var.oidc_id}:sub" = "system:serviceaccount:kube-system:aws-load-balancer-controller"
+            "${var.oidc_id}:aud" = "sts.amazonaws.com"
           }
         }
       }
@@ -40,7 +30,6 @@ resource "aws_iam_policy" "alb_policy" {
   name   = var.alb_policy
   policy = file("${path.module}/iam_policy.json")
 }
-
 
 resource "aws_iam_role_policy_attachment" "alb_attachement" {
   role       = aws_iam_role.role_alb.name
