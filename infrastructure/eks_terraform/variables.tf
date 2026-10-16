@@ -259,3 +259,6 @@ variable "SRV_ACC_NAME" {
   type = string
 }
 
+variable "SA_NAMESPACE" {
+  type = string
+}

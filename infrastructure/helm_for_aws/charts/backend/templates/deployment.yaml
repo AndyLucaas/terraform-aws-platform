@@ -20,7 +20,7 @@ spec:
       labels:
         {{- include "backend.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: {{ include "backend.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
           {{- with .Values.securityContext }}

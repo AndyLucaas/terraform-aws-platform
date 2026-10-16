@@ -20,7 +20,7 @@ resource "helm_release" "aws_load_balancer_controller" {
     name  = "vpcId"
     value = var.vpc_id
     },
-    # Le chart crée le ServiceAccount...
+
     {
       name  = "serviceAccount.create"
       value = "true"
@@ -29,12 +29,12 @@ resource "helm_release" "aws_load_balancer_controller" {
       name  = "serviceAccount.name"
       value = "aws-load-balancer-controller"
     },
-    # ... et y injecte l'ARN du rôle IAM
+
     {
       name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
       value = var.role_arn
     },
-    # Enregistre les IPs des pods comme cibles (VPC CNI)
+  
     {
       name  = "defaultTargetType"
       value = "ip"

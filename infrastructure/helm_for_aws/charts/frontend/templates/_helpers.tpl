@@ -52,12 +52,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 {{/*
 Create the name of the service account to use
-{{- define "frontend.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "frontend.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
 */}}
+{{- define "frontend.serviceAccountName" -}}
+{{- if and .Values.global .Values.global.serviceAccount .Values.global.serviceAccount.name -}}
+{{- .Values.global.serviceAccount.name -}}
+{{- else if and .Values.global .Values.global.serviceAccount (hasKey .Values.global.serviceAccount "create") (not .Values.global.serviceAccount.create) -}}
+{{- "default" -}}
+{{- else -}}
+{{- printf "%s-sa" .Release.Name -}}
+{{- end -}}
+{{- end -}}
+

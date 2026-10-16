@@ -1,3 +1,10 @@
+# Configuration globale partagée entre l'umbrella chart et les subcharts
+global:
+  serviceAccount:
+    create: true
+    name: "secret_manager_credentials"
+    annotations: {}
+
 frontend:
   replicaCount: 1
   image:
@@ -17,7 +24,6 @@ frontend:
 
 backend:
   replicaCount: 1
-
   image:
     repository: andylucas06/itdesk-backend
     pullPolicy: IfNotPresent
@@ -44,7 +50,6 @@ backend:
   volumeMounts:
     - name: attachments
       mountPath: /var/itdesk/attachments
-
 
 ingress:
   enabled: true

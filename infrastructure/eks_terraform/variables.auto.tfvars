@@ -3,10 +3,8 @@ VPC_CIDR        = "10.0.0.0/16"
 VPC_NAME        = "srv_vpc"
 IGW_NAME        = "srv_igw"
 ALB_SUBNET_CIDR = "10.0.1.0/24"
-# AZ1                  = data.aws_availability_zones.available.names[0]
 ALB_SUBNET_NAME = "alb_subnet"
 NGW_SUBNET_CIDR = "10.0.2.0/24"
-# AZ2                  = data.aws_availability_zones.available.names[1]
 NGW_SUBNET_NAME      = "ngw_subnet"
 EKS_SUBNET1_CIDR     = "10.0.3.0/24"
 EKS_SUBNET1_NAME     = "eks_subnet1"
@@ -73,5 +71,6 @@ ALB_POLICY    = "iam_policy_alb"
 
 #IAM =========================================================
 ROLE_NAME    = "role_for_svc_account"
-SRV_ACC_NAME = "secret_manager_credentials"
-ROLE_NAME2 = "node_role"
+SRV_ACC_NAME = "secret-credentials"
+ROLE_NAME2   = "node_role"
+SA_NAMESPACE = "production"

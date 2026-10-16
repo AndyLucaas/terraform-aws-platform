@@ -45,7 +45,7 @@ module "oidc" {
   source = "./modules/aws_iam/aws_oidc"
 
   cluster_name = var.EKS_CLUSTER_NAME
-  depends_on = [ module.eks ]
+  depends_on   = [module.eks]
 }
 module "iam_eks" {
   source = "./modules/aws_iam/aws_iam_eks"
@@ -59,7 +59,7 @@ module "iam_pods" {
   role_name            = var.ROLE_NAME
   oidc_id              = module.oidc.oidc_id
   oidc_arn             = module.oidc.oidc_arn
-  namespace            = var.NAMESPACE
+  namespace            = var.SA_NAMESPACE
   service_account_name = var.SRV_ACC_NAME
   policy_name          = var.IAM_ROLE_NAME
   depends_on           = [module.eks]
@@ -151,4 +151,13 @@ module "alb" {
   role_arn     = module.iam_alb.role_arn
   vpc_id       = module.vpc.vpc_id
   depends_on   = [module.eks, module.iam_alb]
+}
+
+module "eso" {
+  source       = "./modules/external_secret"
+  namespace    = var.SA_NAMESPACE
+  vpc_id       = module.vpc.vpc_id
+  srv_acc_name = var.SRV_ACC_NAME
+  role_arn     = module.iam_pods.role_arn
+  cluster_name = var.EKS_CLUSTER_NAME
 }
