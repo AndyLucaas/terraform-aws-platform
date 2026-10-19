@@ -259,6 +259,6 @@ variable "SRV_ACC_NAME" {
   type = string
 }
 
-variable "SA_NAMESPACE" {
+variable "PROD_NAMESPACE" {
   type = string
 }

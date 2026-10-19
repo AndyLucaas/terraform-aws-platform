@@ -59,7 +59,7 @@ module "iam_pods" {
   role_name            = var.ROLE_NAME
   oidc_id              = module.oidc.oidc_id
   oidc_arn             = module.oidc.oidc_arn
-  namespace            = var.SA_NAMESPACE
+  namespace            = var.PROD_NAMESPACE
   service_account_name = var.SRV_ACC_NAME
   policy_name          = var.IAM_ROLE_NAME
   depends_on           = [module.eks]
@@ -154,10 +154,16 @@ module "alb" {
 }
 
 module "eso" {
-  source       = "./modules/external_secret"
-  namespace    = var.SA_NAMESPACE
+  source       = "./modules/kubernetes/external_secret"
+  namespace    = var.PROD_NAMESPACE
   vpc_id       = module.vpc.vpc_id
   srv_acc_name = var.SRV_ACC_NAME
   role_arn     = module.iam_pods.role_arn
   cluster_name = var.EKS_CLUSTER_NAME
+}
+
+module "external_service" {
+  source     = "./modules/kubernetes/external_service"
+  namespace  = var.PROD_NAMESPACE
+  rds_domain = module.rds.rds_endpoint
 }

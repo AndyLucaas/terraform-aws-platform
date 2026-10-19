@@ -1,12 +1,14 @@
 # Configuration globale partagée entre l'umbrella chart et les subcharts
 global:
-  serviceAccount:
-    create: true
-    name: "secret_manager_credentials"
-    annotations: {}
+  name: "aws-secrets-manager"
+  namespace: "production"
+  service: SecretsManager
+  region: eu-north-1
+
 
 frontend:
   replicaCount: 1
+  namespace: "production"
   image:
     repository: andylucas06/itdesk-frontend
     pullPolicy: IfNotPresent
@@ -21,9 +23,29 @@ frontend:
     - port: 8080
       targetPort: http-port
       protocol: TCP
+  
+  externalSecret:
+    enabled: true
+    name: database-credentials
+    refreshInterval: 1h
+
+    secretStoreRef:
+      name: aws-secrets-manager
+      kind: SecretStore
+
+    target:
+      name: database-credentials
+      creationPolicy: Owner
+
+    data:
+      - secretKey: JWT_TOKEN
+        remoteRef:
+          key: prod/secret/database
+          property: JWT_TOKEN
 
 backend:
   replicaCount: 1
+  namespace: "production"
   image:
     repository: andylucas06/itdesk-backend
     pullPolicy: IfNotPresent
@@ -37,6 +59,30 @@ backend:
     - port: 8080
       targetPort: http-port
       protocol: TCP
+
+  externalSecret:
+    enabled: true
+    name: database-credentials
+    refreshInterval: 1h
+
+    secretStoreRef:
+      name: aws-secrets-manager
+      kind: SecretStore
+
+    target:
+      name: database-credentials
+      creationPolicy: Owner
+
+    data:
+      - secretKey: DB_USERNAME
+        remoteRef:
+          key: prod/secret/database
+          property: DB_USERNAME
+
+      - secretKey: DB_PASSWORD
+        remoteRef:
+          key: prod/secret/database
+          property: DB_USERNAME
 
   config:
     SERVER_PORT: "8080"
@@ -53,6 +99,7 @@ backend:
 
 ingress:
   enabled: true
+  namespace: "production"
   className: alb
   annotations: 
     alb.ingress.kubernetes.io/scheme: internet-facing
