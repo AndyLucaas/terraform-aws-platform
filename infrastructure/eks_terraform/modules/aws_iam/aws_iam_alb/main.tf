@@ -1,4 +1,7 @@
-#alb role ================================================
+locals {
+  oidc_url = replace(var.oidc_id, "https://", "")
+}#alb role ================================================
+
 resource "aws_iam_role" "role_alb" {
   name = var.role_alb_name
 
@@ -13,8 +16,8 @@ resource "aws_iam_role" "role_alb" {
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
           StringEquals = {
-            "${var.oidc_id}:sub" = "system:serviceaccount:kube-system:aws-load-balancer-controller"
-            "${var.oidc_id}:aud" = "sts.amazonaws.com"
+            "${local.oidc_url}:sub" = "system:serviceaccount:kube-system:aws-load-balancer-controller"
+            "${local.oidc_url}:aud" = "sts.amazonaws.com"
           }
         }
       }

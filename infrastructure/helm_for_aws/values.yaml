@@ -26,7 +26,7 @@ frontend:
   
   externalSecret:
     enabled: true
-    name: database-credentials
+    name: front-credentials
     refreshInterval: 1h
 
     secretStoreRef:
@@ -83,6 +83,18 @@ backend:
         remoteRef:
           key: prod/secret/database
           property: DB_USERNAME
+      - secretKey: JWT_SECRET
+        remoteRef:
+          key: prod/secret/database
+          property: JWT_SECRET
+      - secretKey: JWT_ACCESS_TOKEN_VALIDITY_SECONDS
+        remoteRef:
+          key: prod/secret/database
+          property: JWT_ACCESS_TOKEN_VALIDITY_SECONDS
+      - secretKey: JWT_REFRESH_TOKEN_VALIDITY_SECONDS
+        remoteRef:
+          key: prod/secret/database
+          property: JWT_REFRESH_TOKEN_VALIDITY_SECONDS
 
   config:
     SERVER_PORT: "8080"

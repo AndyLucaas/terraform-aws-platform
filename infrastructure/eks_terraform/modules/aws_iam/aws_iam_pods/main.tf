@@ -1,4 +1,7 @@
 #eks cluster role ================================================
+locals {
+  oidc_url = replace(var.oidc_id, "https://", "")
+}
 resource "aws_iam_role" "role_pods" {
   name = var.role_name
 
@@ -13,8 +16,8 @@ resource "aws_iam_role" "role_pods" {
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
           StringEquals = {
-            "${var.oidc_id}:sub" = "system:serviceaccount:${var.namespace}:${var.service_account_name}"
-            "${var.oidc_id}:aud" = "sts.amazonaws.com"
+            "${local.oidc_url}:sub" = "system:serviceaccount:${var.namespace}:${var.service_account_name}"
+            "${local.oidc_url}:aud" = "sts.amazonaws.com"
           }
         }
       }

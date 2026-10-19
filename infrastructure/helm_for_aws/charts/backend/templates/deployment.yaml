@@ -21,7 +21,6 @@ spec:
       labels:
         {{- include "backend.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "backend.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
           {{- with .Values.securityContext }}
@@ -40,7 +39,7 @@ spec:
             - configMapRef:
                 name: {{ include "backend.fullname" . }}-cfg
             - secretRef:
-                name: {{ include "backend.fullname" . }}-secret
+                name: {{ .Values.externalSecret.name }}
                 
           {{- if eq .Values.environment "production" }}
           {{- with .Values.livenessProbe }}

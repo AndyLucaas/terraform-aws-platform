@@ -57,7 +57,7 @@ module "iam_pods" {
   source = "./modules/aws_iam/aws_iam_pods"
 
   role_name            = var.ROLE_NAME
-  oidc_id              = module.oidc.oidc_id
+  oidc_id              = module.oidc.oidc_issuer_url
   oidc_arn             = module.oidc.oidc_arn
   namespace            = var.PROD_NAMESPACE
   service_account_name = var.SRV_ACC_NAME
@@ -139,7 +139,7 @@ module "iam_alb" {
   cluster_name  = var.EKS_CLUSTER_NAME
   role_alb_name = var.ROLE_ALB_NAME
   alb_policy    = var.ALB_POLICY
-  oidc_id       = module.oidc.oidc_id
+  oidc_id       = module.oidc.oidc_issuer_url
   oidc_arn      = module.oidc.oidc_arn
   depends_on    = [module.sg, module.vpc, module.eks]
 }
