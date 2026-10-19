@@ -96,3 +96,11 @@ variable "rds_ingress_to_port" {
 variable "rds_ingress_protocol" {
   type = string
 }
+
+variable "sub_ip_1" {
+  type        = string
+}
+
+variable "sub_ip_2" {
+  type        = string
+}

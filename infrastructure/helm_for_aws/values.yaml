@@ -82,7 +82,8 @@ backend:
       - secretKey: DB_PASSWORD
         remoteRef:
           key: prod/secret/database
-          property: DB_USERNAME
+          property: DB_PASSWORD
+
       - secretKey: JWT_SECRET
         remoteRef:
           key: prod/secret/database

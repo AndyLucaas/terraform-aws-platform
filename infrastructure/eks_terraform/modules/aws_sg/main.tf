@@ -110,9 +110,21 @@ resource "aws_vpc_security_group_ingress_rule" "sg_rds_ingress" {
   to_port           = var.rds_ingress_to_port
   ip_protocol       = var.rds_ingress_protocol
   security_group_id = aws_security_group.sg_rds.id
-  referenced_security_group_id = aws_security_group.sg_eks.id
+  cidr_ipv4 = var.sub_ip_1
   tags = {
     Name = "${var.sg_rds_name}-ingress"
+    managed_by = "Terraform"
+  }
+}
+resource "aws_vpc_security_group_ingress_rule" "sg_rds_ingress2" {
+  description       = "allow connexion to rds from eks only"
+  from_port         = var.rds_ingress_from_port
+  to_port           = var.rds_ingress_to_port
+  ip_protocol       = var.rds_ingress_protocol
+  security_group_id = aws_security_group.sg_rds.id
+  cidr_ipv4 = var.sub_ip_2
+  tags = {
+    Name = "${var.sg_rds_name}-ingress-2"
     managed_by = "Terraform"
   }
 }

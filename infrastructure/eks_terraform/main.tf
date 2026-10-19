@@ -45,13 +45,11 @@ module "oidc" {
   source = "./modules/aws_iam/aws_oidc"
 
   cluster_name = var.EKS_CLUSTER_NAME
-  depends_on   = [module.eks]
 }
 module "iam_eks" {
   source = "./modules/aws_iam/aws_iam_eks"
 
-  role_name  = var.IAM_ROLE_NAME
-  depends_on = [module.vpc]
+  role_name = var.IAM_ROLE_NAME
 }
 module "iam_pods" {
   source = "./modules/aws_iam/aws_iam_pods"
@@ -62,14 +60,12 @@ module "iam_pods" {
   namespace            = var.PROD_NAMESPACE
   service_account_name = var.SRV_ACC_NAME
   policy_name          = var.IAM_ROLE_NAME
-  depends_on           = [module.eks]
 }
 
 module "iam_node" {
   source = "./modules/aws_iam/aws_iam_node"
 
   node_role_name = var.ROLE_NAME2
-  depends_on     = [module.vpc]
 }
 module "sg" {
   source = "./modules/aws_sg"
@@ -104,8 +100,8 @@ module "sg" {
   rds_ingress_from_port = var.RDS_INGRESS_FROM_PORT
   rds_ingress_to_port   = var.RDS_INGRESS_TO_PORT
   rds_ingress_protocol  = var.RDS_INGRESS_PROTOCOL
-
-  depends_on = [module.vpc]
+  sub_ip_1              = var.EKS_SUBNET1_CIDR
+  sub_ip_2              = var.EKS_SUBNET2_CIDR
 }
 
 module "eks" {
@@ -119,8 +115,6 @@ module "eks" {
   eks_subnet1_id  = module.vpc.eks_subnet1_id
   eks_subnet2_id  = module.vpc.eks_subnet2_id
   sg_eks_id       = module.sg.sg_eks_id
-
-  depends_on = [module.sg, module.iam_eks, module.iam_node, module.vpc]
 }
 module "rds" {
   source = "./modules/aws_rds"
@@ -130,8 +124,6 @@ module "rds" {
   # subnet_ids              = module.vpc.private_subnet_ids
   db_password_secret_name = var.DB_PASSWORD_SECRET_NAME
   sg_rds_id               = module.sg.sg_rds_id
-
-  depends_on = [module.sg, module.vpc, module.eks]
 }
 
 module "iam_alb" {
@@ -141,7 +133,6 @@ module "iam_alb" {
   alb_policy    = var.ALB_POLICY
   oidc_id       = module.oidc.oidc_issuer_url
   oidc_arn      = module.oidc.oidc_arn
-  depends_on    = [module.sg, module.vpc, module.eks]
 }
 
 module "alb" {
@@ -150,7 +141,6 @@ module "alb" {
   namespace    = var.NAMESPACE
   role_arn     = module.iam_alb.role_arn
   vpc_id       = module.vpc.vpc_id
-  depends_on   = [module.eks, module.iam_alb]
 }
 
 module "eso" {
