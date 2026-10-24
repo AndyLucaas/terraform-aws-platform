@@ -39,4 +39,4 @@ jobs:
           helm upgrade --install itdesk . \
           -f values.yaml \
           -n production \
-          --set-string "${{ inputs.repo }}.image.tag=${{ TAG }}"
+          --set-string "${{ env.REPO }}.image.tag=${{ env.TAG }}"
