@@ -104,7 +104,7 @@ jobs:
     secrets: inherit
     with:
       cluster_name: ${{ vars.cluster_name }}
-      tag: ${{ TAG }}
+      tag: ${{ env.TAG }}
       repo: frontend
       
   helm-release-backend:
@@ -114,5 +114,5 @@ jobs:
     secrets: inherit
     with:
       cluster_name: ${{ vars.cluster_name }}
-      tag: ${{ TAG }}
+      tag: ${{ env.TAG }}
       repo: backend
