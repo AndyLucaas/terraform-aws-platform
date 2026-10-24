@@ -2,8 +2,7 @@ name: Test environment pipeline
 on:
   push:
     branches:
-      - "feature/infra"
-      - "fix/infra"
+      - "infra/*"
     paths:
       - "infrastructure/eks_terraform/**"
 

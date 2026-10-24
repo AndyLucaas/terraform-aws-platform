@@ -1,0 +1,118 @@
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "frontend/**"
+      - "backend/**"
+env:
+  TAG: ${{ github.sha }}
+  REPO: ${{ vars.DOCKERHUB_USERNAME }}
+jobs:
+  check-changement:
+    runs-on: ubuntu-24.04
+
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed files
+        uses: dorny/paths-filter@v4
+        id: filter  
+        with:
+          filters: |
+            frontend:
+              - "frontend/**"
+            backend:
+              - "backend/**"
+
+  build-push-frontend:
+    needs: check-changement
+    if: needs.check-changement.outputs.frontend == "true"
+    runs-on: ubuntu-24.04
+    
+    steps:
+
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ env.REPO }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build docker image
+        run: |
+          docker build -t ${{ env.REPO }}/itdesk-frontend:${{ env.TAG }} -f frontend/Dockerfile frontend
+ 
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: '${{ env.REPO }}/itdesk-frontend:${{ env.TAG }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      
+      - name: push docker image
+        run: docker push ${{ env.REPO }}/itdesk-frontend:${{ env.TAG }}
+  
+  build-push-backend:
+    needs: check-changement
+    if: needs.check-changement.outputs.backend == "true"
+    runs-on: ubuntu-24.04
+    steps:
+
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ env.REPO }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build docker image
+        run: |
+          docker build -t ${{ env.REPO }}/itdesk-backend:${{ env.TAG }} -f backend/Dockerfile backend
+ 
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: '${{ env.REPO }}/itdesk-backend:${{ env.TAG }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+      
+      - name: push docker image
+        run: docker push ${{ env.REPO }}/itdesk-backend:${{ env.TAG }}
+
+  helm-release-frontend:
+    needs: [check-changement, build-push-frontend]
+    uses:  ./.github/workflows/deploy.yaml
+    if: needs.check-changement.outputs.frontend == "true" 
+    secrets: inherit
+    with:
+      cluster_name: ${{ vars.cluster_name }}
+      tag: ${{ TAG }}
+      repo: frontend
+      
+  helm-release-backend:
+    needs: [check-changement, build-push-backend]
+    uses:  ./.github/workflows/deploy.yaml
+    if: needs.check-changement.outputs.backend == "true" 
+    secrets: inherit
+    with:
+      cluster_name: ${{ vars.cluster_name }}
+      tag: ${{ TAG }}
+      repo: backend
