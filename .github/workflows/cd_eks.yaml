@@ -1,7 +1,8 @@
 name: deploy infra
 on:
   push:
-    branches: ["feature"]
+    branches:
+      - "main"
     paths:
       - "infrastructure/eks_terraform/**"
 
