@@ -34,7 +34,7 @@ jobs:
 
   build-push-frontend:
     needs: check-changement
-    if: needs.check-changement.outputs.frontend == "true"
+    if: needs.check-changement.outputs.frontend == 'true'
     runs-on: ubuntu-24.04
     
     steps:
@@ -67,7 +67,7 @@ jobs:
   
   build-push-backend:
     needs: check-changement
-    if: needs.check-changement.outputs.backend == "true"
+    if: needs.check-changement.outputs.backend == 'true'
     runs-on: ubuntu-24.04
     steps:
 
@@ -100,7 +100,7 @@ jobs:
   helm-release-frontend:
     needs: [check-changement, build-push-frontend]
     uses:  ./.github/workflows/deploy.yaml
-    if: needs.check-changement.outputs.frontend == "true" 
+    if: needs.check-changement.outputs.frontend == 'true'
     secrets: inherit
     with:
       cluster_name: ${{ vars.cluster_name }}
@@ -110,7 +110,7 @@ jobs:
   helm-release-backend:
     needs: [check-changement, build-push-backend]
     uses:  ./.github/workflows/deploy.yaml
-    if: needs.check-changement.outputs.backend == "true" 
+    if: needs.check-changement.outputs.backend == 'true'
     secrets: inherit
     with:
       cluster_name: ${{ vars.cluster_name }}
