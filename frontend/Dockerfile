@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM node:24 AS builder
 
 WORKDIR /build
 
@@ -11,7 +11,7 @@ COPY . .
 ENV VITE_API_BASE_URL=http://api.ticket.local 
 RUN npm run build
 
-FROM nginxinc/nginx-unprivileged:1.27
+FROM nginx:1.30.6-alpine-slim
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /build/dist /usr/share/nginx/html
