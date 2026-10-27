@@ -45,6 +45,7 @@ module "oidc" {
   source = "./modules/aws_iam/aws_oidc"
 
   cluster_name = var.EKS_CLUSTER_NAME
+  depends_on = [module.eks]
 }
 module "iam_eks" {
   source = "./modules/aws_iam/aws_iam_eks"
@@ -141,6 +142,8 @@ module "alb" {
   namespace    = var.NAMESPACE
   role_arn     = module.iam_alb.role_arn
   vpc_id       = module.vpc.vpc_id
+  depends_on = [module.eks]
+
 }
 
 module "eso" {
