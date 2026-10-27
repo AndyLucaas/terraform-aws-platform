@@ -122,7 +122,7 @@ module "rds" {
 
   db_name = var.DB_NAME
   db_port = var.DB_PORT
-  # subnet_ids              = module.vpc.private_subnet_ids
+  subnet_ids              = module.vpc.private_subnet_ids
   db_password_secret_name = var.DB_PASSWORD_SECRET_NAME
   sg_rds_id               = module.sg.sg_rds_id
 }
