@@ -5,6 +5,8 @@ on:
     paths:
       - "frontend/**"
       - "backend/**"
+permissions:
+  contents: read
 env:
   TAG: ${{ github.sha }}
   REPO: ${{ vars.DOCKERHUB_USERNAME }}
