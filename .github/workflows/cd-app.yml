@@ -1,3 +1,4 @@
+name: app deployment
 on:
   push:
     branches:
