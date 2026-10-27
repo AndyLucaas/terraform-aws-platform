@@ -2,7 +2,7 @@ name: CI frontend
 on:
   push:
     branches:
-      - "feature/*"
+      - "feature/**"
     paths:
       - "frontend/**"
   pull_request:
@@ -65,5 +65,3 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
-  
