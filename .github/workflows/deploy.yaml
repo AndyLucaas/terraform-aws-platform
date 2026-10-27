@@ -40,3 +40,4 @@ jobs:
           -f values.yaml \
           -n production \
           --set-string "${{ env.REPO }}.image.tag=${{ env.TAG }}"
+        working-directory: infrastructure/helm

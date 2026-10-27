@@ -1,5 +1,0 @@
-apiVersion: v2
-name: frontend
-description: A Helm chart for It-ticket frontend
-version: 0.1.0
-appVersion: "1.16.0"

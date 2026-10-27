@@ -1,5 +1,14 @@
+# Configuration globale partagée entre l'umbrella chart et les subcharts
+global:
+  name: "aws-secrets-manager"
+  namespace: "production"
+  service: SecretsManager
+  region: eu-north-1
+
+
 frontend:
   replicaCount: 1
+  namespace: "production"
   image:
     repository: andylucas06/itdesk-frontend
     pullPolicy: IfNotPresent
@@ -14,10 +23,29 @@ frontend:
     - port: 8080
       targetPort: http-port
       protocol: TCP
+  
+  externalSecret:
+    enabled: true
+    name: front-credentials
+    refreshInterval: 1h
+
+    secretStoreRef:
+      name: aws-secrets-manager
+      kind: SecretStore
+
+    target:
+      name: database-credentials
+      creationPolicy: Owner
+
+    data:
+      - secretKey: JWT_TOKEN
+        remoteRef:
+          key: prod/secret/database
+          property: JWT_TOKEN
 
 backend:
   replicaCount: 1
-
+  namespace: "production"
   image:
     repository: andylucas06/itdesk-backend
     pullPolicy: IfNotPresent
@@ -32,6 +60,43 @@ backend:
       targetPort: http-port
       protocol: TCP
 
+  externalSecret:
+    enabled: true
+    name: database-credentials
+    refreshInterval: 1h
+
+    secretStoreRef:
+      name: aws-secrets-manager
+      kind: SecretStore
+
+    target:
+      name: database-credentials
+      creationPolicy: Owner
+
+    data:
+      - secretKey: DB_USERNAME
+        remoteRef:
+          key: prod/secret/database
+          property: DB_USERNAME
+
+      - secretKey: DB_PASSWORD
+        remoteRef:
+          key: prod/secret/database
+          property: DB_PASSWORD
+
+      - secretKey: JWT_SECRET
+        remoteRef:
+          key: prod/secret/database
+          property: JWT_SECRET
+      - secretKey: JWT_ACCESS_TOKEN_VALIDITY_SECONDS
+        remoteRef:
+          key: prod/secret/database
+          property: JWT_ACCESS_TOKEN_VALIDITY_SECONDS
+      - secretKey: JWT_REFRESH_TOKEN_VALIDITY_SECONDS
+        remoteRef:
+          key: prod/secret/database
+          property: JWT_REFRESH_TOKEN_VALIDITY_SECONDS
+
   config:
     SERVER_PORT: "8080"
     CORS_ALLOWED_ORIGINS: "http://app.itticket.local"
@@ -45,30 +110,14 @@ backend:
     - name: attachments
       mountPath: /var/itdesk/attachments
 
-postgresql:
-  image: 
-    repository: postgres
-    tag: 16-alpine
-    pullPolicy: IfNotPresent
-  service:
-    - port: 5432
-      targetPort: http
-      protocol: TCP
-  ports:
-    - name: http
-      containerPort: 5432
-      protocol: TCP
-  volumeMounts:
-    - name: data
-      mountPath: /var/lib/postgresql/data
-  volumes:
-    - name: data
-      emptyDir: {}
-
 ingress:
   enabled: true
-  className: nginx
-  annotations: {}
+  namespace: "production"
+  className: alb
+  annotations: 
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
   hosts:
     - host: app.itticket.local
       paths:

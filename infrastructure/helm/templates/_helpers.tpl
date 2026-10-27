@@ -53,10 +53,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Create the name of the service account to use
 */}}
+
 {{- define "helm.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "helm.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
+{{- $sa := or .Values.global.serviceAccount .Values.serviceAccount -}}
+{{- if and $sa $sa.name -}}
+{{- $sa.name -}}
+{{- else if and $sa (hasKey $sa "create") (not $sa.create) -}}
+{{- "default" -}}
+{{- else -}}
+{{- printf "%s-sa" .Release.Name -}}
+{{- end -}}
+{{- end -}}
+
+
+

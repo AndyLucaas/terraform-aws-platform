@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "backend.name" . }}
+  namespace: {{ .Values.namespace }}
   labels:
     {{- include "backend.selectorLabels" . | nindent 4 }}
 spec:
@@ -20,10 +21,6 @@ spec:
       labels:
         {{- include "backend.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           {{- with .Values.securityContext }}
@@ -42,7 +39,7 @@ spec:
             - configMapRef:
                 name: {{ include "backend.fullname" . }}-cfg
             - secretRef:
-                name: {{ include "backend.fullname" . }}-secret
+                name: {{ .Values.externalSecret.name }}
                 
           {{- if eq .Values.environment "production" }}
           {{- with .Values.livenessProbe }}
