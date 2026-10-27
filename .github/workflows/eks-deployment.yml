@@ -35,7 +35,3 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -out=tfplan
         working-directory: infrastructure/eks_terraform
-
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
-        working-directory: infrastructure/eks_terraform
