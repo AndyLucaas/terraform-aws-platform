@@ -153,10 +153,13 @@ module "eso" {
   srv_acc_name = var.SRV_ACC_NAME
   role_arn     = module.iam_pods.role_arn
   cluster_name = var.EKS_CLUSTER_NAME
+  depends_on = [module.eks]
+
 }
 
 module "external_service" {
   source     = "./modules/kubernetes/external_service"
   namespace  = var.PROD_NAMESPACE
   rds_domain = module.rds.rds_endpoint
+  depends_on = [module.eks]
 }
