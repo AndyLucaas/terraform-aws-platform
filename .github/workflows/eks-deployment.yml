@@ -22,7 +22,7 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v4
         with:
-          terraform_version: "1.14.6"
+          terraform_version: "1.16.0"
 
       - name: Terraform Init
         run: terraform init
@@ -34,8 +34,4 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: infrastructure/eks_terraform
-
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
         working-directory: infrastructure/eks_terraform
