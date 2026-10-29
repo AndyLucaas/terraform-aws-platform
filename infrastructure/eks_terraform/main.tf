@@ -125,6 +125,7 @@ module "rds" {
   # subnet_ids              = module.vpc.private_subnet_ids
   db_password_secret_name = var.DB_PASSWORD_SECRET_NAME
   sg_rds_id               = module.sg.sg_rds_id
+  depends_on = [ module.vpc ]
 }
 
 module "iam_alb" {
