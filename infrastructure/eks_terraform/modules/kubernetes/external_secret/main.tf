@@ -6,7 +6,8 @@ resource "helm_release" "eso" {
   version    = "2.12.0"
   create_namespace = true
   wait       = true
-  atomic     = false
+  atomic     = true
+  cleanup_on_fail = true
 
   set = [
     {
