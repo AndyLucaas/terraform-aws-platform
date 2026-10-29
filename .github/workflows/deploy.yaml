@@ -39,5 +39,5 @@ jobs:
           helm upgrade --install itticket . \
           -f values.yaml \
           -n production \
-          --set-string "${{ env.REPO }}.image.tag=${{ env.TAG }}"
+          --set-string "${{ env.TODEPLOY }}.image.tag=${{ env.TAG }}"
         working-directory: infrastructure/helm
