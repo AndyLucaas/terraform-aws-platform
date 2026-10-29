@@ -12,7 +12,7 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { to: '/', label: 'Tableau de bord', icon: LayoutDashboard },
+  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/tickets', label: 'Tickets', icon: Ticket },
   { to: '/users', label: 'Utilisateurs', icon: Users, roles: ['ADMINISTRATOR', 'MANAGER'] },
   { to: '/organization', label: 'Organisation', icon: Building2, roles: ['ADMINISTRATOR', 'MANAGER'] },
