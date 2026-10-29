@@ -35,18 +35,27 @@ jobs:
       - name: build
         working-directory: frontend
         run: npm run build
-      
-      - name: upload build artifacts
+
+      - name: Upload npm manifests
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-build
-          path: frontend/dist
+          name: frontend-manifests
+          path: |
+            frontend/package.json
+            frontend/package-lock.json
 
   Test:
     name: Example workflow using Snyk
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+
+      - name: Download npm manifests
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-manifests
+          path: frontend
+          
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
