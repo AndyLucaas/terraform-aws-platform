@@ -36,30 +36,10 @@ jobs:
         working-directory: frontend
         run: npm run build
 
-      - name: Upload npm manifests
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-manifests
-          path: |
-            frontend/package.json
-            frontend/package-lock.json
-
-  Test:
-    name: Example workflow using Snyk
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-
-      - name: Download npm manifests
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-manifests
-          path: frontend
-          
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: monitor
-          args: --file=frontend/package.json --project-name=itdesk-frontend
+          args: --project-name=itdesk-frontend
