@@ -154,7 +154,7 @@ module "eso" {
   srv_acc_name = var.SRV_ACC_NAME
   role_arn     = module.iam_pods.role_arn
   cluster_name = var.EKS_CLUSTER_NAME
-  depends_on = [module.eks]
+  depends_on = [module.eks, module.alb]
 
 }
 
