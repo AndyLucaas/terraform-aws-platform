@@ -36,7 +36,7 @@ jobs:
 
       - name: deploy
         run: |
-          helm upgrade --install itdesk . \
+          helm upgrade --install itticket . \
           -f values.yaml \
           -n production \
           --set-string "${{ env.REPO }}.image.tag=${{ env.TAG }}"
