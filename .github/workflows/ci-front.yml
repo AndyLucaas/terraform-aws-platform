@@ -11,35 +11,56 @@ on:
     paths:
       - "frontend/**"
 
+permissions:
+  contents: read
+  security-events: write   # nécessaire pour l'upload SARIF
+
 jobs:
   build_frontend:
     runs-on: ubuntu-24.04
     steps:
-      - name: checkout sc
+      - name: checkout src
         uses: actions/checkout@v4
-        
+
       - name: use node version 24
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
           cache-dependency-path: frontend/package-lock.json
 
       - name: install dependencies
         working-directory: frontend
         run: npm ci
-        
+
       - name: lint
         working-directory: frontend
         run: npm run lint
-        
+
       - name: build
         working-directory: frontend
         run: npm run build
-      
-      - name: upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-build
-          path: frontend/dist
 
-  
+      - name: Snyk dependency scan
+        id: snyk
+        uses: snyk/actions/node@master   # idéalement épinglé sur un SHA
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: >-
+            --file=frontend/package.json
+            --severity-threshold=high
+            --sarif-file-output=snyk.sarif
+
+      - name: Upload result to GitHub Code Scanning
+        if: always() && hashFiles('snyk.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
+
+      - name: Fail job if Snyk found vulnerabilities
+        if: steps.snyk.outcome == 'failure'
+        run: |
+          echo "Snyk a détecté des vulnérabilités de sévérité high ou plus."
+          exit 1

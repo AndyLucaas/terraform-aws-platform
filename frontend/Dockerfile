@@ -7,6 +7,7 @@ RUN npm ci
 
 COPY . .
 
+#comment for test
 ENV VITE_API_BASE_URL=http://api.ticket.local 
 RUN npm run build
 

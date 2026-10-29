@@ -1,1 +1,3 @@
 ./infrastructure/eks_terraform/.terraform/*
+.env
+.env.example
