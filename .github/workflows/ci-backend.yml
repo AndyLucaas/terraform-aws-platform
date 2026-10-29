@@ -26,3 +26,21 @@ jobs:
 
       - name: build and test
         run: mvn -B clean package --file backend/pom.xml
+      
+      - name: Snyk dependency scan
+        id: snyk
+        uses: snyk/actions/node@master   # idéalement épinglé sur un SHA
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: >-
+            --file=backend/pom.xml
+            --severity-threshold=high
+            --sarif-file-output=snyk.sarif
+
+      - name: Upload result to GitHub Code Scanning
+        if: always() && hashFiles('snyk.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
