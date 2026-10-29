@@ -41,4 +41,5 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          run: snyk monitor --file=package.json --project-name=itdesk-frontend
+          command: monitor 
+          file: frontend/package.json 
