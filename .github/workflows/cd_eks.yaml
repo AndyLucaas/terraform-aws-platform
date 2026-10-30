@@ -1,10 +1,10 @@
-name: deploy infra
-on:
-  push:
-    branches:
-      - "main"
-    paths:
-      - "infrastructure/eks_terraform/**"
+# name: deploy infra
+# on:
+#   push:
+#     branches:
+#       - "main"
+#     paths:
+#       - "infrastructure/eks_terraform/**"
 
 jobs:
   deploy:

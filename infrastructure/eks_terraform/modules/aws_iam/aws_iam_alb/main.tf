@@ -1,7 +1,7 @@
 locals {
   oidc_url = replace(var.oidc_id, "https://", "")
-}#alb role ================================================
-
+}
+#alb role ================================================
 resource "aws_iam_role" "role_alb" {
   name = var.role_alb_name
 

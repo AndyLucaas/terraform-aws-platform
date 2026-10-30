@@ -9,17 +9,14 @@ on:
       - "backend/**"
   schedule:
     - cron: "00 00 * * 1"
-
 permissions:
   contents: read
-
 jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
       frontend: ${{ steps.filter.outputs.frontend }}
       backend: ${{ steps.filter.outputs.backend }}
-
     steps:
       - uses: actions/checkout@v4
 
@@ -39,8 +36,7 @@ jobs:
     if: >-
       ${{
         github.event_name == 'schedule' ||
-        needs.changes.outputs.frontend == 'true'
-      }}
+        needs.changes.outputs.frontend == 'true'}}
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -67,8 +63,7 @@ jobs:
     if: >-
       ${{
         github.event_name == 'schedule' ||
-        needs.changes.outputs.backend == 'true'
-      }}
+        needs.changes.outputs.backend == 'true' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: read

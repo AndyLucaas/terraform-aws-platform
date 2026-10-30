@@ -29,7 +29,7 @@ jobs:
       
       - name: Snyk dependency scan
         id: snyk
-        uses: snyk/actions/node@master   # idéalement épinglé sur un SHA
+        uses: snyk/actions/node@master   
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

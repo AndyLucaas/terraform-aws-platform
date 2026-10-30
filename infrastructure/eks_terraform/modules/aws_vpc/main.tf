@@ -2,7 +2,6 @@ resource "aws_vpc" "web_srv_vpc" {
   cidr_block           = var.vpc_cidr_block
   enable_dns_support   = true
   enable_dns_hostnames = true
-
   tags = {
     Name       = var.vpc_name
     managed_by = "Terraform"
@@ -24,7 +23,6 @@ resource "aws_subnet" "alb_subnet" {
   vpc_id     = aws_vpc.web_srv_vpc.id
   cidr_block = var.alb_subnet_cidr
   availability_zone = var.az1
-
   tags = {
     Name = var.alb_subnet_name
     "kubernetes.io/role/elb" = "1"

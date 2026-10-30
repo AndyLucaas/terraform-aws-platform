@@ -143,7 +143,7 @@ module "alb" {
   namespace    = var.NAMESPACE
   role_arn     = module.iam_alb.role_arn
   vpc_id       = module.vpc.vpc_id
-  depends_on = [module.eks]
+  depends_on = [module.eks, module.vpc, module.iam_alb]
 
 }
 

@@ -137,10 +137,7 @@ ingress:
               name: itticket-backend-svc
               port:
                 number: 8080
-  # tls: 
-  #   - secretName: chart-example-tls
-  #     hosts:  
-  #       - app.itticket.local
+
 autoscaling:
   enabled: false
 httpRoute:
