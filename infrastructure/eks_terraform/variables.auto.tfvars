@@ -34,7 +34,7 @@ EKS_EGRESS_TO_PORT   = 5432
 EKS_EGRESS_PROTOCOL  = "tcp"
 
 # sg for alb ============================================
-SG_ALB_NAME              = "sg_alb"
+SG_ALB_NAME              = "sg_alb_test"
 HTTP_INGRESS_FROM_PORT   = 80
 HTTP_INGRESS_TO_PORT     = 80
 HTTP_INGRESS_PROTOCOL    = "tcp"
