@@ -3,7 +3,6 @@ FROM maven:3.9-eclipse-temurin-21 AS builder
 
 WORKDIR /build
 
-# Couche de cache : les dépendances ne sont retéléchargées que si pom.xml change
 COPY pom.xml .
 RUN mvn -B dependency:go-offline
 
