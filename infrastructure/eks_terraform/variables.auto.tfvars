@@ -55,7 +55,7 @@ RDS_INGRESS_TO_PORT   = 5432
 RDS_INGRESS_PROTOCOL  = "tcp"
 
 #eks cluster ==========================================
-EKS_CLUSTER_NAME    = "srv-k8s-cluster"
+EKS_CLUSTER_NAME    = "srv-k8s-cluster_test"
 EKS_NODE_GROUP_NAME = "cluster-rnode-group"
 EKS_INSTANCE_TYPE   = "c7i-flex.large"
 
