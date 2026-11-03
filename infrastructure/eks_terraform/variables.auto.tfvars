@@ -49,7 +49,7 @@ ALB_EGRESS_TO_PORT   = 8080
 ALB_EGRESS_PROTOCOL  = "tcp"
 
 #sg for rds ==========================================
-SG_RDS_NAME           = "sg_rds"
+SG_RDS_NAME           = "sg_rds_test"
 RDS_INGRESS_FROM_PORT = 5432
 RDS_INGRESS_TO_PORT   = 5432
 RDS_INGRESS_PROTOCOL  = "tcp"
