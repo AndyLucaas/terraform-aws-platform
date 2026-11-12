@@ -101,9 +101,10 @@ jobs:
         run: docker push ${{ env.REPO }}/itdesk-backend:${{ env.TAG }}
 
   helm-release-frontend:
-    needs: [check-changement, build-push-frontend]
+    # needs: [check-changement, build-push-frontend]
+    needs: build-push-frontend
     uses:  ./.github/workflows/deploy.yaml
-    if: needs.check-changement.outputs.frontend == 'true'
+    # if: needs.check-changement.outputs.frontend == 'true'
     secrets: inherit
     with:
       cluster_name: ${{ vars.cluster_name }}
@@ -111,9 +112,10 @@ jobs:
       repo: frontend
       
   helm-release-backend:
-    needs: [check-changement, build-push-backend]
+    # needs: [check-changement, build-push-backend]
+    needs: build-push-backend
     uses:  ./.github/workflows/deploy.yaml
-    if: needs.check-changement.outputs.backend == 'true'
+    # if: needs.check-changement.outputs.backend == 'true'
     secrets: inherit
     with:
       cluster_name: ${{ vars.cluster_name }}
