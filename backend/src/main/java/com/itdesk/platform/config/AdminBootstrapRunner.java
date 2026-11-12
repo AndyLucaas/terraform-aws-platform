@@ -14,13 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-/**
- * Sans Keycloak, plus personne ne provisionne le tout premier compte
- * administrateur automatiquement. Ce runner vérifie à chaque démarrage si un
- * compte ADMINISTRATOR existe déjà ; sinon, il en crée un avec un mot de
- * passe aléatoire, affiché UNE SEULE FOIS dans les logs — à changer
- * immédiatement à la première connexion (mustChangePassword est forcé à true).
- */
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -65,7 +59,7 @@ public class AdminBootstrapRunner implements CommandLineRunner {
         log.warn("""
 
                 ================================================================
-                Premier démarrage : compte administrateur créé automatiquement.
+                Premier démarrage : compte administrateur créé automatiquement ici.
                   Utilisateur : {}
                   Mot de passe : {}
                 Ce mot de passe ne sera plus jamais affiché. Connectez-vous et
