@@ -2,13 +2,14 @@
 name: CodeQL customized
 
 on:
-  pull_request:
-    branches: ["main"]
+  push:
+    branches:
+      - "feature/**"
+      - "bugfix/**"
     paths:
       - "frontend/**"
       - "backend/**"
-  schedule:
-    - cron: "00 00 * * 1"
+
 permissions:
   contents: read
 jobs:
