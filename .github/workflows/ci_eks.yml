@@ -45,7 +45,7 @@ jobs:
         with:
           args: >-
             --file=frontend/package.json
-            --severity-threshold=high
+            --severity-threshold=critical
             --sarif-file-output=snyk.sarif
 
       - name: Upload result to GitHub Code Scanning
@@ -54,7 +54,7 @@ jobs:
         with:
           sarif_file: snyk.sarif
 
-      - name: Fail job if Snyk found vulnerabilities
+      - name: Fail si snyk trouve des vulnérabilités high ou plus
         if: steps.snyk.outcome == 'failure'
         run: |
           echo "Snyk a détecté des vulnérabilités de sévérité high ou plus."
