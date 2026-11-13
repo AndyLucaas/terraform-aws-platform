@@ -44,7 +44,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: >-
-            --file=frontend/package.json
+            --file=infrastructure/eks_terraform
             --severity-threshold=critical
             --sarif-file-output=snyk.sarif
 
