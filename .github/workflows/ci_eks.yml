@@ -60,3 +60,19 @@ jobs:
       #   run: |
       #     echo "Snyk a détecté des vulnérabilités de sévérité high ou plus."
       #     exit 1
+  check_vulnerabilities:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Snyk to check Kubernetes manifest file for issues
+        uses: snyk/actions/iac@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          file: infrastructure/eks_terraform
+          args: --severity-threshold=high
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
