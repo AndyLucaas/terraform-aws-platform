@@ -1,6 +1,6 @@
 aws_region           = "eu-north-1"
 VPC_CIDR             = "10.0.0.0/16"
-VPC_NAME             = "srv_vpc"
+VPC_NAME             = "srv_vpc2"
 IGW_NAME             = "srv_igw"
 ALB_SUBNET_CIDR      = "10.0.1.0/24"
 ALB_SUBNET_NAME      = "alb_subnet"
