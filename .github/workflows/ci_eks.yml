@@ -31,7 +31,8 @@ jobs:
       - name: Terraform validate
         run: terraform validate
         working-directory: infrastructure/eks_terraform
-
+      - run: aws eks update-kubeconfig --name ${{ vars.CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+        working-directory: infrastructure/eks_terraform
       - name: Terraform Plan
         run: terraform plan -out=tfplan
         working-directory: infrastructure/eks_terraform
