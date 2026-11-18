@@ -49,7 +49,7 @@ backend:
   image:
     repository: andylucas06/itdesk-backend
     pullPolicy: IfNotPresent
-    tag: 1
+    tag: 21
   
   ports:
     - name:  http-port
