@@ -8,7 +8,6 @@ import com.itdesk.platform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +21,7 @@ public class AdminBootstrapRunner implements CommandLineRunner {
 
     private static final String ADMIN_ROLE_CODE = "ADMINISTRATOR";
     private static final String DEFAULT_ADMIN_USERNAME = "admin";
+    private static final String DEFAULT_ADMIN_PASSWORD = "Pcgammer06!";
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -40,15 +40,13 @@ public class AdminBootstrapRunner implements CommandLineRunner {
         Role adminRole = roleRepository.findByCode(ADMIN_ROLE_CODE)
                 .orElseThrow(() -> new IllegalStateException("Rôle introuvable : " + ADMIN_ROLE_CODE));
 
-        String temporaryPassword = KeyGenerators.string().generateKey();
-
         User admin = User.builder()
                 .username(DEFAULT_ADMIN_USERNAME)
                 .email("admin@itdesk.local")
                 .firstName("Admin")
                 .lastName("Système")
-                .passwordHash(passwordEncoder.encode(temporaryPassword))
-                .mustChangePassword(true)
+                .passwordHash(passwordEncoder.encode(DEFAULT_ADMIN_PASSWORD))
+                .mustChangePassword(false)
                 .status(UserStatus.ACTIVE)
                 .available(true)
                 .roles(Set.of(adminRole))
@@ -56,16 +54,13 @@ public class AdminBootstrapRunner implements CommandLineRunner {
 
         userRepository.save(admin);
 
-        log.warn("""
+        log.info("""
 
                 ================================================================
-                Premier démarrage : compte administrateur créé automatiquement ici.
+                Premier démarrage : compte administrateur initialisé.
                   Utilisateur : {}
-                  Mot de passe : {}
-                Ce mot de passe ne sera plus jamais affiché. Connectez-vous et
-                changez-le immédiatement (un changement est de toute façon exigé
-                à la première connexion).
+                  Mot de passe par défaut : {}
                 ================================================================
-                """, DEFAULT_ADMIN_USERNAME, temporaryPassword);
+                """, DEFAULT_ADMIN_USERNAME, DEFAULT_ADMIN_PASSWORD);
     }
 }
