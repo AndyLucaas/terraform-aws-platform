@@ -164,3 +164,9 @@ module "external_service" {
   rds_domain = module.rds.rds_endpoint
   depends_on = [module.eks]
 }
+
+module "metrics_server" {
+  source       = "./modules/kubernetes/metric_server"
+  cluster_name = var.EKS_CLUSTER_NAME
+  depends_on   = [module.eks]
+}

@@ -19,8 +19,17 @@ config: {}
 ingress:
   enabled: false
 
+externalSecret:
+  enabled: false
+
 
 resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 250Mi
+  # requests:
+  #   cpu: 250m
+  #   memory: 125Mi
 
 livenessProbe:
   httpGet:
@@ -34,9 +43,10 @@ readinessProbe:
 autoscaling:
   enabled: false
   minReplicas: 1
-  maxReplicas: 100
+  maxReplicas: 5
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
+  behavior: {}
 
 volumes: []
 

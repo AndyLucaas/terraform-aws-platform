@@ -6,7 +6,7 @@ data "aws_iam_policy_document" "read_policy" {
       "secretsmanager:DescribeSecret"
     ]
     resources = [
-      "arn:aws:secretsmanager:eu-north-1:980921726244:secret:prod/secret/database-BDy92Q",
+      "arn:aws:secretsmanager:eu-north-1:735856058652:secret:prod/secret/database-blvog5",
     ]
   }
 }
