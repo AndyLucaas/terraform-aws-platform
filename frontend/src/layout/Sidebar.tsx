@@ -28,7 +28,7 @@ export function Sidebar() {
         <div className="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-sm font-bold text-white">
           IT
         </div>
-        <span className="text-sm font-semibold text-text-primary">ITTICKET</span>
+        <span className="text-sm font-semibold text-text-primary">IT Desk V1</span>
       </div>
 
       <nav className="flex-1 space-y-0.5 px-3 py-2">
