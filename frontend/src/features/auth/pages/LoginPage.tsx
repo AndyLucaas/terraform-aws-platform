@@ -41,14 +41,14 @@ export function LoginPage() {
           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-brand text-sm font-bold text-white">
             IT
           </div>
-          <span className="text-base font-semibold text-text-primary">IT Desk</span>
+          <span className="text-base font-semibold text-text-primary">IT Desk V2</span>
         </div>
 
         <Card>
           <CardContent>
             <h1 className="text-sm font-semibold text-text-primary">Connexion</h1>
             <p className="mt-0.5 text-xs text-text-secondary">
-              Accédez à la plateforme de gestion de tickets
+              Accédez à la plateforme de gestion de tickets V2
             </p>
 
             <form onSubmit={handleSubmit(onSubmit)} className="mt-5 flex flex-col gap-4">
