@@ -70,7 +70,7 @@ ROLE_ALB_NAME = "iam_role_alb"
 ALB_POLICY    = "iam_policy_alb"
 
 #IAM =========================================================
-ROLE_NAME      = "role_for_svc_account2"
+ROLE_NAME      = "role_for_svc_account_demo"
 SRV_ACC_NAME   = "secret-credentials"
 ROLE_NAME2     = "node_role"
 PROD_NAMESPACE = "production"
